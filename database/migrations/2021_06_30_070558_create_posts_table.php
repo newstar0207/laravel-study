@@ -11,8 +11,11 @@ class CreatePostsTable extends Migration
      *
      * @return void
      */
+
+     // up : 데이터베이스에 테이블, 컬럼, 인덱스를 추가하는데 사용
+
     public function up() // migration 
-    {
+    {   // posts 테이블 생성함
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->string('title');
