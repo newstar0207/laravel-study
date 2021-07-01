@@ -28,7 +28,7 @@ class CreatePostsTable extends Migration
             $table->timestamps(); // updateAt, createAt 을 자동으로 생성해줌
         });
     }
-    // 객체하나가 레코드 하나로 매핑되는것!
+    // 객체하나가 레코드 하나로 매핑되는것! == 모델 (Model)
     /**
      * Reverse the migrations.
      *

@@ -17,8 +17,14 @@
         <div>
             <form class="editor mx-auto w-10/12 flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg max-w-2xl" action="/posts/store" method="POST">
                 @csrf
-                <input name="title" class="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" placeholder="Title" type="text">
-                <textarea name="content" class="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none" spellcheck="false" placeholder="Describe everything about this post here"></textarea>
+                <input name="title" class="title bg-gray-100 border border-gray-300 p-2 mb-4 outline-none" spellcheck="false" placeholder="Title" type="text" value="{{ old('title') }}">
+                @error('title')
+                    <div>{{ $message }}</div>
+                @enderror
+                <textarea name="content" placeholder="Describe everything about this post here" class="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none" value="{{ old('content') }}"></textarea>
+                @error('content')
+                     <div>{{ $message }}</div>
+                @enderror
 
                 <!-- icons -->
                 <div class="icons flex text-gray-500 m-2">
