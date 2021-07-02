@@ -5,11 +5,16 @@
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     </head> 
     <body>
-        <div id="menu" class="container mx-auto px-4 lg:pt-24 lg:pb-64">
+        <div id="menu" class="container mx-auto px-4 lg:pt-24 lg:pb-64" >
             <div class="flex flex-wrap text-center justify-center">
-                <a href="/posts/create">create post</a>
+                {{-- 로그인한 사용자인지 아닌지 확인 위함 --}}
                 <div class="w-full lg:w-6/12 px-4">
                     <h2 class="text-4xl font-semibold text-black">Our Posts</h2>
+                    @auth
+                        <a  href="/posts/create">create post</a>
+                    @endauth
+                    {{-- 라라벨 함수 이용할 경우 {{}} 필요 --}}
+                    <a href="{{route('dashboard')}}">Dashboard</a> 
                     <p class="text-lg leading-relaxed mt-4 mb-4 text-gray-500">
                         게시글 리스트
                     </p>
@@ -23,10 +28,13 @@
                         alt="..."
                         src="https://source.unsplash.com/gUBJ9vSlky0"
                         class="h-24 w-24 rounded  mx-auto"
-                        /> 
+                        />   
                     </div>
-                    <div class="col-span-2 sm:col-span-4 xl:col-span-4">
-                        <h3 class="font-semibold text-black">{{$post -> title }}</h3>
+                    <div class="col-span-2 sm:col-span-4 xl:col-span-4">   
+                        <a href="{{ route('posts.show', [ 'id' => $post->id , 'page'=> $posts->currentPage()] ) }}"
+                            >
+                            <h3 class="font-semibold text-black" > {{$post -> title }}</h3>
+                        </a>
                         <p>
                             {{ $post-> content}} <br><br>
                             {{ $post-> created_at}}

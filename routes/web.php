@@ -20,11 +20,12 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard'); // 라우터에 전달되기전 로그인 여부를 체크함
 
-require __DIR__.'/auth.php';
+require __DIR__.'/auth.php';    
 
-Route::get('/posts/create', [PostsController::class, 'create']);
-Route::post('/posts/store', [PostsController::class, 'store']);
-Route::get('/posts/index', [PostsController::class, 'index']);
+Route::get('/posts/create', [PostsController::class, 'create']) /*->middleware(['auth'])*/;
+Route::post('/posts/store', [PostsController::class, 'store']) ->name('posts.store') /*-> middleware(['auth']) */;
+Route::get('/posts/index', [PostsController::class, 'index']) ->name('posts.index');
+Route::get('/posts/show/{id}', [PostsController::class, 'show']) ->name('posts.show'); // default 는 get 방식
 

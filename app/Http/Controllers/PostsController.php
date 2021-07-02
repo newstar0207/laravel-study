@@ -9,6 +9,18 @@ use PhpParser\Node\Expr\AssignOp\Pow;
 
 class PostsController extends Controller
 {
+    public function __construct()
+    { // only <-> excepts
+        $this->middleware(['auth']) -> except(['index', 'show']); // 생성자를 만들어 auth 미들웨어를 무조건 거치게 함!
+    }
+ 
+    public function  show( Request $request) {
+        // dd($request);
+        // $post = Post::find($id);   
+        $page = $request -> page;
+        return view('posts.show', compact('page'));
+    }
+
     public function create() {
         // dd('OK');/
         return view('posts.create');
@@ -35,17 +47,18 @@ class PostsController extends Controller
         $post-> user_id = Auth::user() -> id; // 지금 로그인한 사용자 user 모델 객채를 줌
         $post -> save();
 
-
         return redirect('/posts/index');
+        
         // dd($request);
     }
  
-    public function index() {
+    public function index(Request $request ) {
         // $posts = Post::orderBy('created_at', 'desc')->get();
         $posts = Post::paginate(5);
         // $posts = Post::latest()->get();
+        // dd($posts);   
 
-        return view('/posts/index', ['posts' => $posts]);
+        return view('/posts/index', ['posts' => $posts, 'page' => $request]); 
         // dd($posts[0] -> created_at);
     }
 }
