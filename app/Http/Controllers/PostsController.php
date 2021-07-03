@@ -14,11 +14,12 @@ class PostsController extends Controller
         $this->middleware(['auth']) -> except(['index', 'show']); // 생성자를 만들어 auth 미들웨어를 무조건 거치게 함!
     }
  
-    public function  show( Request $request) {
-        // dd($request);
-        // $post = Post::find($id);   
+    public function  show(Request $request, $id) {
         $page = $request -> page;
-        return view('posts.show', compact('page'));
+        // dd($request); 
+        $post = Post::find($id);
+        // dd($page);         
+        return view('posts.show', compact('page', 'post'));
     }
 
     public function create() {
@@ -52,13 +53,14 @@ class PostsController extends Controller
         // dd($request);
     }
  
-    public function index(Request $request ) {
+    public function index( ) {
         // $posts = Post::orderBy('created_at', 'desc')->get();
         $posts = Post::paginate(5);
+        // dd($posts);            
         // $posts = Post::latest()->get();
-        // dd($posts);   
+        // dd($posts);       
 
-        return view('/posts/index', ['posts' => $posts, 'page' => $request]); 
+        return view('/posts/index', compact('posts')); 
         // dd($posts[0] -> created_at);
     }
 }
