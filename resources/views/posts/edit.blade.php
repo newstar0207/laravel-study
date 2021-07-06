@@ -23,7 +23,7 @@
                 @error('title')
                     <div>{{ $message }}</div>
                 @enderror
-                <textarea name="content" id="content" type="text" value="{{ old('content') ? old('content') : $post->content }}" placeholder="Describe everything about this post here" class="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none" ></textarea>
+                <textarea name="content" id="content" type="text" placeholder="Describe everything about this post here" class="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none" >{{ old('content') ? old('content') : $post->content }}</textarea>
                 @error('content')
                      <div>{{ $message }}</div>
                 @enderror
