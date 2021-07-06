@@ -28,4 +28,7 @@ Route::get('/posts/create', [PostsController::class, 'create']) /*->middleware([
 Route::post('/posts/store', [PostsController::class, 'store']) ->name('posts.store') /*-> middleware(['auth']) */;
 Route::get('/posts/index', [PostsController::class, 'index']) ->name('posts.index');
 Route::get('/posts/show/{id}', [PostsController::class, 'show']) ->name('posts.show'); // default 는 get 방식
+Route::get('/posts/{post}', [PostsController::class, 'edit']) -> name('posts.edit');// router parameter : {post}
+Route::put('/posts/{id}', [PostsController::class, 'update']) -> name('posts.update');// router parameter : {id}
+Route::delete('/posts/{id}', [PostsController::class, 'destroy']) -> name('posts.delete');// router parameter : {id}
 

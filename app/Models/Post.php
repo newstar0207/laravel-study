@@ -12,8 +12,9 @@ class Post extends Model
     public function imagePath(){
         // $path = '/storage/images/';
         $path = env('IMAGE_PATH', '/storage/images/');
-        $imageFile = $this->image ?? 'checkmark-green_1625469672.png'; 
+        $imageFile = $this->image ?? 'default.png'; 
         // $imageFile = $this->image ?? 'default image';
         return $path.$imageFile;
     }
-}
+}     
+      

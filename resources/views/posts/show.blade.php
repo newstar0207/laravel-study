@@ -42,6 +42,11 @@
                             <span class="ml-2 text-sm"> {{ $post -> created_at }} {{ $post -> updated_at }}</span>
                         </div>
                     </div>
+                    <div style="text-align: center" >  
+                        <button style="margin-left: 30px" type="button" onclick="location.href='{{route('posts.edit', ['post'=> $post->id])}}'">수정</a>
+                        <button style="margin-left: 30px" type="button" onclick="location.href='{{route('posts.delete', ['id'=> $post->id])}}'">삭제</a>
+                        {{-- <a href="{{route('posts.delete', ['id'=> $post->id])}}" >삭제</a> --}}
+                    </div>
                 </div>
             </div>
         </div>

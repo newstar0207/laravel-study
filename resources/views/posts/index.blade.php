@@ -20,27 +20,27 @@
                     </p>
                 </div>
             </div>
-            @foreach ($posts as $tpost) 
+            @foreach ($posts as $post) 
             <div class="flex flex-wrap mt-12 justify-center">
                 <div class="grid grid-cols-1 sm:grid-cols-6 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-6 gap-4">
                     <div class="col-span-2 sm:col-span-1 xl:col-span-1">
                         <img
                         alt="..."
-                        {{-- src="/storage/images/{{$tpost-> image }}" --}}
-                        src="{{$tpost-> imagePath()}}"
+                        {{-- src="/storage/images/{{$post-> image }}" --}}
+                        src="{{$post-> imagePath()}}"
                         class="h-24 w-24 rounded  mx-auto"
                         /> 
                     </div>
                     <div class="col-span-2 sm:col-span-4 xl:col-span-4">   
-                        <a href="{{ route('posts.show', ['id'=> $tpost->id, 'page'=> $posts->currentPage()]) }}"    >
-                            <h3 class="font-semibold text-black" > {{$tpost -> title }}</h3>
+                        <a href="{{ route('posts.show', ['id'=> $post->id, 'page'=> $posts->currentPage()]) }}"    >
+                            <h3 class="font-semibold text-black" > {{$post -> title }}</h3>
                         </a>  
                         <p>
-                            {{-- {{$tpost-> content}} <br><br> --}}
-                            {{$tpost-> created_at}}
+                            CONTENT : {{$post-> content}} <br><br>
+                            {{$post-> created_at -> diffForHumans()}}
                         </p>
                     </div>
-                    <div class="col-span-2 sm:col-span-1 xl:col-span-1 italic ">{{$tpost -> user_id }}</div>        
+                    <div class="col-span-2 sm:col-span-1 xl:col-span-1 italic ">{{$post -> user_id }}</div>        
                 </div>
             </div>
             @endforeach
