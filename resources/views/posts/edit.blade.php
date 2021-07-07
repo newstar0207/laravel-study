@@ -15,7 +15,7 @@
     <body>
         <div class="heading text-center font-bold text-2xl m-5 text-gray-800">New Post</div>
         <div>
-            <form class="editor mx-auto w-10/12 flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg max-w-2xl" action="{{ route('posts.update', ['id' => $post->id ])}} " method="POST" enctype="multipart/form-data">
+            <form class="editor mx-auto w-10/12 flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg max-w-2xl" action="{{ route('posts.update', ['id' => $post->id , 'page' => $page])}} " method="POST" enctype="multipart/form-data">
                 @csrf
                 @method("put")
                 {{-- method  spoofing --}}
@@ -41,7 +41,7 @@
 
                 <!-- buttons -->
                 <div class="buttons flex">
-                    <button class="btn border border-gray-300 p-1 px-4 font-semibold cursor-pointer text-gray-500 ml-auto"><a href="{{route('posts.index')}}">Cancle</a></button>
+                    <button class="btn border border-gray-300 p-1 px-4 font-semibold cursor-pointer text-gray-500 ml-auto"><a href="{{route('posts.index', ['page' => $page])}}">Cancle</a></button>
                     <button type="submit" class="btn border border-indigo-500 p-1 px-4 font-semibold cursor-pointer text-gray-200 ml-2 bg-indigo-500">Post</div>
                 </div>
 

@@ -42,13 +42,24 @@
                             <span class="ml-2 text-sm"> {{ $post -> created_at }} {{ $post -> updated_at }}</span>
                         </div>
                     </div>
+                    {{-- Authorization --}}
+                    @auth
+                    {{-- @if (auth()->user()->id == $post->user_id) --}}
+                    @can('update', $post)    
                     <div style="text-align: center" >  
-                        <button style="margin-left: 30px" type="button" onclick="location.href='{{route('posts.edit', ['post'=> $post->id])}}'">수정</a>
-                        <button style="margin-left: 30px" type="button" onclick="location.href='{{route('posts.delete', ['id'=> $post->id])}}'">삭제</a>
-                        {{-- <a href="{{route('posts.delete', ['id'=> $post->id])}}" >삭제</a> --}}
+                        <button style="margin-left: 30px" type="button" onclick="location.href='{{route('posts.edit', ['post'=> $post->id, 'page' => $page])}}'">수정</a>
+                            {{-- location.href 는 get 방식 --}}
+                            <form action="{{ route('posts.delete', ['id' => $post ->id, 'page' => $page]) }}" method="post">
+                                @csrf
+                                @method('delete')
+                                <button type='sumbit' style="margin-left: 30px" type="button">삭제</a>
+                                </form>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
+                    @endcan
+                    {{-- @endif    --}}
+                    @endauth
         </div>
         </body>
 </html>
