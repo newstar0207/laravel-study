@@ -36,9 +36,9 @@
                                     alt="Placeholder"
                                     c/lass="rounded-t-xl object-cover h-48 w-full"
                                 /> --}}
-                                <span class="ml-2 text-sm"> {{ $post -> user_id}} </span><br>
+                                <span class="ml-2 text-sm"> {{ $post -> user->name}} </span><br>
                             </div>
-                            <span class="ml-2 text-sm"> {{ $post -> content }} </span>
+                            <div name="content" id="content" class="ml-2 text-sm"> {!! $post -> content !!} </div>
                             <span class="ml-2 text-sm"> {{ $post -> created_at }} {{ $post -> updated_at }}</span>
                         </div>
                     </div>

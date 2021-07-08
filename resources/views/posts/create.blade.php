@@ -11,6 +11,7 @@
             }
             body {background:white !important;}
         </style>
+        <script src="https://cdn.ckeditor.com/ckeditor5/29.0.0/classic/ckeditor.js"></script>
     </head> 
     <body>
         <div class="heading text-center font-bold text-2xl m-5 text-gray-800">New Post</div>
@@ -21,7 +22,9 @@
                 @error('title')
                     <div>{{ $message }}</div>
                 @enderror
-                <textarea name="content" placeholder="Describe everything about this post here" class="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none" value="{{ old('content') }}"></textarea>
+
+                <textarea id="content" name="content" placeholder="Describe everything about this post here" class="description bg-gray-100 sec p-3 h-60 border border-gray-300 outline-none" value="{{ old('content') }}"></textarea>
+                
                 @error('content')
                      <div>{{ $message }}</div>
                 @enderror
@@ -43,6 +46,16 @@
                 </div>
 
             </form>
-        </div>    
+        </div> 
+        <script>
+                        ClassicEditor
+                                .create( document.querySelector( '#content' ) )
+                                .then( editor => {
+                                        console.log( editor );
+                                } )
+                                .catch( error => {
+                                        console.error( error );
+                                } );
+        </script>   
     </body>
 </html>

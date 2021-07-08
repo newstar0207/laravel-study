@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Models\User;
 use GuzzleHttp\Psr7\UploadedFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -164,6 +165,19 @@ class PostsController extends Controller
         
         return redirect() -> route('posts.index', ['page' => $page]);
     }
+
+    public function myindex(){
+        // dd('ok1!!!');   
+        // $user = auth()->user()->posts; // posts (Post.php 의 posts() 메소드)
+        // dd($user);   
+        $posts = auth()->user()->posts->latest()->paginate(5);  
+        // dd($myposts);  
+        // $posts =  auth()->user()->posts()->latest()->paginate(5);
+        // dd(auth()->user()); // 현재 로그인한 사용자 정보
+        
+        // dd($posts);
+        return view('posts.index', compact('posts')); 
+    }   
 
 
 
