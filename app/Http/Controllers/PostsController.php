@@ -23,6 +23,8 @@ class PostsController extends Controller
         // dd($request); 
         $post = Post::find($id);
         // dd($page);         
+        $post->count++; // 메모리 상에서만 ++이라 save 해주어야 함 (조회수 증가)
+        $post->save(); // DB에 반영
         return view('posts.show', compact('page', 'post'));
     }
 

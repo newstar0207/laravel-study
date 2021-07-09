@@ -39,6 +39,7 @@
                             CONTENT : {{$post-> content}} <br><br>
                             {{$post-> created_at -> diffForHumans()}}
                         </p>
+                        <span>조회수 : {{$post->count}} {{ $post->count > 0 ? Str::plural('view',$post->count ) : 'view ' }}</span>
                     </div>
                     <div class="col-span-2 sm:col-span-1 xl:col-span-1 italic ">{{$post -> user_id }}</div>        
                 </div>

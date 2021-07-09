@@ -53,10 +53,11 @@
                                 @csrf
                                 @method('delete')
                                 <button type='sumbit' style="margin-left: 30px" type="button">삭제</a>
-                                </form>
+                            </form>
                             </div>
                         </div>
                     </div>
+                    
                     @endcan
                     {{-- @endif    --}}
                     @endauth
