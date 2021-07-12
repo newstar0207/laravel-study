@@ -43,8 +43,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function posts(){ 
+    public function posts()
+    {
         return $this->hasMany(Post::class);
     }
+
+    public function viewd_Posts()
+    {
+        return $this->belongsToMany(Post::class); // 관례를 따랐기에 생략가능함.
+        // return $this->belongsToMany(Post::class, 'post_user', 'user_id', 'post_id', 'id', 'id', 'posts');
+    }
 }
-    
