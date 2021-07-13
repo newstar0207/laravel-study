@@ -16,15 +16,17 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')">
-                        {{ __('Posts') }} 
+                        {{ __('Posts') }}
                     </x-nav-link>
                     <x-nav-link :href="route('posts.myindex')" :active="request()->routeIs('posts.myindex')">
-                        {{ __('MyPosts') }} 
+                        {{ __('MyPosts') }}
                     </x-nav-link>
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
+            @auth
+
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -53,6 +55,7 @@
                     </x-slot>
                 </x-dropdown>
             </div>
+            @endauth
 
             <!-- Hamburger -->
             <div class="-mr-2 flex items-center sm:hidden">

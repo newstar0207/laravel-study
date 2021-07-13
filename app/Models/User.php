@@ -18,7 +18,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
+    protected $fillable = [ // create 시 filable 만 가능
         'name',
         'email',
         'password',

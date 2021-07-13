@@ -187,6 +187,7 @@ class PostsController extends Controller
         // dd('ok1!!!');
         // $user = auth()->user()->posts; // posts (Post.php 의 posts() 메소드)
         // dd($user);
+        // dd(auth()->user()->posts());
         $posts = auth()->user()->posts()->latest()->paginate(5);
         // dd($myposts);
         // $posts =  auth()->user()->posts()->latest()->paginate(5);

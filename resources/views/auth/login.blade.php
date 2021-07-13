@@ -52,5 +52,21 @@
                 </x-button>
             </div>
         </form>
+        <br>
+        <div>
+            <button class="bg-gray-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <a href="{{ route('github.login')}} ">Github Login</a>
+            </button>
+            <button class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <a href="">Google Login</a>
+            </button>
+            <button class="bg-yellow-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <a href="">Kakao Login</a>
+            </button>
+        </div>
+
+
     </x-auth-card>
+
+
 </x-guest-layout>
