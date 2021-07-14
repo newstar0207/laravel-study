@@ -196,4 +196,10 @@ class PostsController extends Controller
         // dd($posts);
         return view('posts.index', compact('posts'));
     }
+
+    public function test()
+    {
+        $this->data = User::all();
+        dd($this->data->assertDatabaseHas('users', ['name' => 'newstar0207@g.yju.ac.kr']));
+    }
 }
