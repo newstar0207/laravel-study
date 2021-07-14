@@ -30,4 +30,9 @@ class Post extends Model
         return $this->belongsToMany(User::class);
         // return $this->belongsToMany(User::class , 'post_user', 'post_id', 'user_id', 'id', 'id', 'users'); //관례를 따랐기에 안써도 괜찮음
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

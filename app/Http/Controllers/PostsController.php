@@ -18,7 +18,7 @@ class PostsController extends Controller
         $this->middleware(['auth'])->except(['index', 'show']); // 생성자를 만들어 auth 미들웨어를 무조건 거치게 함!
     }
 
-    public function  show(Request $request, $id)
+    public function show(Request $request, $id)
     {
         $page = $request->page;
         // dd($request);
@@ -26,13 +26,15 @@ class PostsController extends Controller
         // dd($page);
         // $post->count++; // 메모리 상에서만 ++이라 save 해주어야 함 (조회수 증가)
         // $post->save(); // DB에 반영
-
+        // dd($post);
         // 1. 이글을 조회한 사용자들 중에, 현재 로그인한 사용자가 포함되어 있는가 체크후 포함되어있지 않으면 추가, 포함되면 넘김.
         if (auth()->user() !== null && !$post->viewers->contains(auth()->user())) {
             $post->viewers()->attach(auth()->user()->id);
         }
 
-        return view('posts.show', compact('page', 'post'));
+        $comments = Post::find($id)->comments;
+
+        return view('posts.show', compact('page', 'post', 'comments'));
     }
 
     public function create()
@@ -197,9 +199,9 @@ class PostsController extends Controller
         return view('posts.index', compact('posts'));
     }
 
-    public function test()
-    {
-        $this->data = User::all();
-        dd($this->data->assertDatabaseHas('users', ['name' => 'newstar0207@g.yju.ac.kr']));
-    }
+    // public function test()
+    // {
+    //     $this->data = User::all();
+    //     dd($this->data->assertDatabaseHas('users', ['name' => 'newstar0207@g.yju.ac.kr']));
+    // }
 }

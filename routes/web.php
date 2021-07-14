@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChartController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostsController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,3 +38,4 @@ Route::get('/posts/{post}', [PostsController::class, 'edit'])->name('posts.edit'
 Route::put('/posts/{id}', [PostsController::class, 'update'])->name('posts.update'); // router parameter : {id}
 Route::delete('/posts/{id}', [PostsController::class, 'destroy'])->name('posts.delete'); // router parameter : {id}
 Route::get('/char/index', [ChartController::class, 'index'])->name('chart');
+Route::post('/comment/store', [CommentController::class, 'store'])->name('comment.store');
