@@ -13,10 +13,11 @@ class CommentController extends Controller
         // dd($request);
         $comment = new Comment;
         $comment->user_id = auth()->user()->id;
+        $comment->user_name = auth()->user()->name;
         $comment->post_id = $request->id;
         $comment->comment = $request->comment;
         $comment->save();
-        dd($request->id);
+        // dd($request->id);
         // $comments = Post::find($request->id)->comments; // redirect 에서 불림
 
         // dd($comment);

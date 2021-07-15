@@ -61,6 +61,9 @@
                                 </button>
                             </form>
                     </div>
+                    @endcan
+                    {{-- @endif    --}}
+                    @endauth
                     <div class="col-span-3 row-span-4 p-1 m-1">
                         <form action="{{ route('comment.store', ['id'=>$post->id, 'page' => $page]) }}" method="post">
                             @csrf
@@ -72,7 +75,7 @@
                         @foreach ($comments as $comment)
                         <div class="bg-white rounded-lg p-3  flex flex-col justify-center items-center md:items-start shadow-lg mb-4">
                             <div class="flex flex-row justify-center mr-2">
-                              <h3 class="text-purple-600 font-semibold text-lg text-center md:text-left ">{{$comment->user_id}}</h3>
+                              <h3 class="text-purple-600 font-semibold text-lg text-center md:text-left ">{{$comment->user_name}}</h3>
                             </div>
                               <p style="width: 90%" class="text-gray-600 text-lg text-center md:text-left ">{{ $comment->comment}} </p>
                           </div>
@@ -81,9 +84,6 @@
                 </div>
 
 
-                    @endcan
-                    {{-- @endif    --}}
-                    @endauth
         </div>
         </body>
 </html>
