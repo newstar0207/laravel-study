@@ -7,6 +7,7 @@ use App\Models\User;
 use GuzzleHttp\Psr7\UploadedFile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Expr\AssignOp\Pow;
 use Illuminate\Support\Str;
@@ -198,9 +199,14 @@ class PostsController extends Controller
         return view('posts.index', compact('posts'));
     }
 
-    // public function test()
-    // {
-    //     $this->data = User::all();
-    //     dd($this->data->assertDatabaseHas('users', ['name' => 'newstar0207@g.yju.ac.kr']));
-    // }
+    public function search(Request $request)
+    {
+        // dd($request);
+        $search = $request->search;
+        // $posts = DB::table('posts')->where('title', 'like', "%$search%")->paginate(5);
+        $posts = Post::where('title', 'like', "%$search%")->paginate(5);
+
+        // dd($posts);
+        return view('posts.index', compact('posts'));
+    }
 }

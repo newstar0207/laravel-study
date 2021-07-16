@@ -18,6 +18,14 @@
                     <p class="text-lg leading-relaxed mt-4 mb-4 text-gray-500">
                         게시글 리스트
                     </p>
+
+                    <div>
+                        <form action="{{route('posts.search') }}">
+                            <input type="text" name='search'>
+                            <button>검색</button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
             @foreach ($posts as $post)
@@ -26,8 +34,8 @@
                     <div class="col-span-2 sm:col-span-1 xl:col-span-1">
                         <img
                         alt="..."
-                        {{-- src="/storage/images/{{$post-> image }}" --}}
-                        src="{{$post-> imagePath()}}"
+                        src="/storage/images/{{$post-> image }}"
+                        {{-- src="{{$post-> imagePath()}}" --}}
                         class="h-24 w-24 rounded  mx-auto"
                         />
                     </div>
@@ -38,6 +46,7 @@
                         <p>
                             CONTENT : {{$post-> content}} <br><br>
                             {{$post-> created_at -> diffForHumans()}}
+                            {{-- {{$post-> created_at}} --}}
                         </p>
                         <span>조회수 : {{$post->viewers->count()}} {{ $post->viewers->count() > 0 ? Str::plural('view',$post->viewers->count() ) : 'view ' }}</span>
                     </div>
