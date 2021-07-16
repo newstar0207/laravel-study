@@ -55,7 +55,9 @@
             </div>
             @endforeach
             <div >
-                {{$posts ->links() }}
+                {{-- {{$posts ->links() }} --}}
+                {{-- {{ $posts->appends(['search' => $search])->links()}} --}}
+                {{ $posts->withQueryString()->links() }}
             </div>
         </div>
 

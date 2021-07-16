@@ -89,6 +89,7 @@ class PostsController extends Controller
         // dd($posts);
         // $posts = Post::latest()->get();
         // dd($posts);
+        // $search = '';
 
         return view('posts.index', compact('posts'));
         // dd($posts[0] -> created_at);
@@ -205,7 +206,8 @@ class PostsController extends Controller
         $search = $request->search;
         // $posts = DB::table('posts')->where('title', 'like', "%$search%")->paginate(5);
         $posts = Post::where('title', 'like', "%$search%")->paginate(5);
-
+        // $posts
+        // search 한 값 사라짐 search = a
         // dd($posts);
         return view('posts.index', compact('posts'));
     }
