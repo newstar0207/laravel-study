@@ -62,26 +62,42 @@
                             </form>
                     </div>
                     @endcan
+
+
                     {{-- @endif    --}}
-                    @endauth
-                    <div class="col-span-3 row-span-4 p-1 m-1">
+                    <div class="col-span-3 min-w-full row-span-4 p-1 m-1">
                         <form action="{{ route('comment.store', ['id'=>$post->id, 'page' => $page]) }}" method="post">
                             @csrf
                             <input type="text" name="comment" >
                             <button type="submit">댓글</button>
                         </form>
                     </div>
-                    <div>
-                        @foreach ($comments as $comment)
-                        <div class="bg-white rounded-lg p-3  flex flex-col justify-center items-center md:items-start shadow-lg mb-4">
-                            <div class="flex flex-row justify-center mr-2">
-                              <h3 class="text-purple-600 font-semibold text-lg text-center md:text-left ">{{$comment->user_name}}</h3>
-                            </div>
-                              <p style="width: 90%" class="text-gray-600 text-lg text-center md:text-left ">{{ $comment->comment}} </p>
-                          </div>
-                        @endforeach
+
+
+                    @endauth
+
+                    @foreach ($comments as $comment)
+                    <div class="bg-white col-span-3 min-w-full rounded-lg p-3 flex-col justify-center items-center shadow-lg mb-4">
+                        <div class="flex flex-col col-span-3 min-w-full justify-center">
+                            <form action="{{route('comment.edit', ['id' => $comment->id, 'post' => $post, 'page' => $page])}}" method="post">
+                                @csrf
+                                <div class="flex">
+                                    <h3 class="flex-1 text-purple-600 font-semibold text-lg text-center md:text-left ">{{$comment->user_name}}</h3>
+                                    @auth
+
+                                    @if (Auth::user()->name == $comment->user_name)
+                                    <button type="submit" name="edit" value="update" class="flex-1">수정</button>
+                                    <button type="submit" name="edit" value="delete" class="flex-1">삭제</button>
+                                    @endif
+
+                                    @endauth
+                                </div>
+                                <textarea style="width: 100%" name='comment' value='commet' row='2' class="text-gray-600 text-lg text-center md:text-left ">{{ $comment->comment}} </textarea>
+                            </form>
+                        </div>
                     </div>
-                </div>
+                    @endforeach
+
 
 
         </div>

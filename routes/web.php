@@ -28,7 +28,7 @@ require __DIR__ . '/auth.php';
 
 
 
-Route::get('/test', [PostsController::class, 'test'])->name('test');
+// Route::get('/test', [PostsController::class, 'test'])->name('test');
 Route::get('/posts/myindex', [PostsController::class, 'myindex'])->name('posts.myindex');
 Route::get('/posts/create', [PostsController::class, 'create']) /*->middleware(['auth'])*/;
 Route::post('/posts/store', [PostsController::class, 'store'])->name('posts.store') /*-> middleware(['auth']) */;
@@ -40,3 +40,6 @@ Route::put('/posts/{id}', [PostsController::class, 'update'])->name('posts.updat
 Route::delete('/posts/{id}', [PostsController::class, 'destroy'])->name('posts.delete'); // router parameter : {id}
 Route::get('/char/index', [ChartController::class, 'index'])->name('chart');
 Route::post('/comment/store', [CommentController::class, 'store'])->name('comment.store');
+Route::post('/comment/update', [CommentController::class, 'update'])->name('comment.update');
+Route::post('/comment/updateSave', [CommentController::class, 'updateSave'])->name('comment.updateSave');
+Route::post('/comment/{id}', [CommentController::class, 'edit'])->name('comment.edit');

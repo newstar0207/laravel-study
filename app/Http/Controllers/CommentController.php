@@ -25,4 +25,21 @@ class CommentController extends Controller
         return redirect()->route('posts.show', ['id' => $request->id, 'page' => $request->page, 'comments' => $comment]);
         // dd($comment);
     }
+
+    public function edit(Request $request, $id)
+    {
+        // dd($request);
+        if ($request->edit == 'update') {
+            // 업데이트 부분..
+            $comment = Comment::find($id);
+            $comment->comment = $request->comment;
+            $comment->save();
+        } else if ($request->edit == 'delete') {
+            $comment = Comment::find($id);
+            $comment->delete();
+            // dd($request);
+        }
+
+        return redirect()->route('posts.show', [$request->post]);
+    }
 }
