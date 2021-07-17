@@ -34,8 +34,8 @@
                     <div class="col-span-2 sm:col-span-1 xl:col-span-1">
                         <img
                         alt="..."
-                        src="/storage/images/{{$post-> image }}"
-                        {{-- src="{{$post-> imagePath()}}" --}}
+                        {{-- src="/storage/images/{{$post-> image }}" --}}
+                        src="{{$post-> imagePath()}}"
                         class="h-24 w-24 rounded  mx-auto"
                         />
                     </div>

@@ -15,7 +15,7 @@ class Post extends Model
     {
         // $path = '/storage/images/';
         $path = env('IMAGE_PATH', '/storage/images/');
-        $imageFile = $this->image ?? 'default.png';
+        $imageFile = $this->image ?? 'default.jpg';
         // $imageFile = $this->image ?? 'default image';
         return $path . $imageFile;
     }
