@@ -8,4 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Comment extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'content', 'image', 'user_id'
+    ];
+
+    // protected $guard = [ // 안되는것만 적어둠
+
+    // ];
+
+    public function writer()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }
