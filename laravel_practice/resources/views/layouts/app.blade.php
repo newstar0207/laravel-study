@@ -1,21 +1,11 @@
 <html lang="en">
-    <head>
-        @include('layouts.header')
-        <style>
-            .active{
-                color : red;
-            }
-            a {
-                text-decoration:none;
-            }
-        </style>
-    </head>
-    <body>
-        @yield('content')
-
-        <footer>
-            @include('layouts.footer')
-        </footer>
-    </body>
-
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body class="bg-gradient-to-r from-gray-100 to-gray-200">
+    @yield('content')
+</body>
 </html>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Car;
+use App\Rules\Uppercase;
 use Illuminate\Http\Request;
 
 class CarsController extends Controller
@@ -13,7 +15,12 @@ class CarsController extends Controller
      */
     public function index()
     {
-        return view('cars/index');
+        $cars = Car::all();
+
+        // dd(Car::all()->count());
+        return view('cars/index', [
+            'cars' => $cars,
+        ]);
     }
 
     /**
@@ -23,7 +30,7 @@ class CarsController extends Controller
      */
     public function create()
     {
-        //
+        return view('cars/create');
     }
 
     /**
@@ -34,7 +41,31 @@ class CarsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $request->validate([
+            'name' => new Uppercase, // app.rule (php artisan make:rule name)
+            'founded' => 'required|integer|min:0|max:2021',  // int, 최소 , 최대
+            'description' => 'required',
+        ]);
+
+        // If it's valid, it will proceed -> create method
+        // If it's not valid, throw a ValidationException
+
+
+
+        // $car = new Car;
+        // $car->name = $request->input('name');
+        // $car->founded = $request->input('founded');
+        // $car->description = $request->input('description');
+        // $car->save();
+
+        Car::create([
+            'name' => $request->input('name'),
+            'founded' => $request->input('founded'),
+            'description' => $request->input('description'),
+        ]);
+
+        return redirect('/cars');
     }
 
     /**
@@ -45,7 +76,12 @@ class CarsController extends Controller
      */
     public function show($id)
     {
-        //
+        $car = Car::find($id);
+
+        // dd($car->engines);
+        // var_dump($car->productionDates);
+
+        return view('cars.show')->with('car', $car);
     }
 
     /**
@@ -56,7 +92,9 @@ class CarsController extends Controller
      */
     public function edit($id)
     {
-        //
+        $car = Car::find($id)->first();
+
+        return View('cars.edit')->with('car', $car);
     }
 
     /**
@@ -68,7 +106,14 @@ class CarsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        Car::where('id', $id)
+            ->update([
+                'name' => $request->input('name'),
+                'founded' => $request->input('founded'),
+                'description' => $request->input('description')
+            ]);
+
+        return redirect('/cars');
     }
 
     /**
@@ -77,8 +122,12 @@ class CarsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Car $car)
     {
-        //
+
+        dd($car);
+        $car->delete();
+
+        return redirect('/cars');
     }
 }
