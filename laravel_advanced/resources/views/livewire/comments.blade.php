@@ -5,6 +5,19 @@
         @endif
     </div>
 
+    <section>
+        @if ($image)
+            <img src="{{$image->temporaryUrl()}}" alt="" >
+        @endif
+        <input type="file" id="image" wire:model="image" wire:loading.attr="disabled">
+        <div wire:loading wire:target="image" class="text-red-500 ml-3">
+            File Uploading...
+            @error('image')
+            fail...
+            @enderror
+        </div>
+    </section>
+
     <form wire:submit.prevent="addComment">
         <input wire:model.lazy="newComment" class="w-full shadow-inner p-4 border-b mb-4 rounded-lg focus:shadow-outline text-xl" placeholder="Add new Comment"></input>
         <button class="font-bold py-2 px-4 w-full bg-purple-400 text-lg text-white shadow-md rounded-lg ">Comment </button>
@@ -30,14 +43,14 @@
                 {{ $comment->content }}
             </div>
 
-            <div>
-            </div>
-
             @if ($comment->image)
-                <img src="{{ $comment->image }}" alt="">
+                <img src="{{ $comment->Image_Path }}" alt="" width="200" class="border-b text-gray-500">
             @else
-
             @endif
+
+            <div>
+        </div>
+
 
             <!-- card footer -->
             <div class="bg-white border-gray-200 text-right">

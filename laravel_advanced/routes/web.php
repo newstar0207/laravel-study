@@ -13,11 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::middleware(['auth:sanctum', 'verified'])->get('/', function () {
     return view('welcome');
 })->name('comments');
 
-Route::middleware(['auth:sancatum', 'verified'])->get('/dashboard', function () { // dashboard 사용시 auth:sanctum, verified 미들웨어를 사용함
+Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () { // dashboard 사용시 auth:sanctum, verified 미들웨어를 사용함
     return view('dashboard');
 })->name('dashboard');
 
