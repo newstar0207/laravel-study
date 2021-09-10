@@ -14,7 +14,7 @@ class Car extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['name', 'founded', 'description']; // 꼭 있어야함
+    protected $fillable = ['name', 'founded', 'description', 'image_path']; // 꼭 있어야함
 
     protected $hiddien = ['updated_at'];
 

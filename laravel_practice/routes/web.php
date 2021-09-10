@@ -4,6 +4,7 @@ use App\Http\Controllers\CarsController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\ProductsController;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +17,17 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/test', function () {
+    return ('test');
+})->name('test');
+
+Route::get('/about', function () {
+    return redirect()->route('test');
+});
+
+
+
 
 
 Route::resource('/cars', CarsController::class);

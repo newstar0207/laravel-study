@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateValidationRequest;
 use App\Models\Car;
 use App\Rules\Uppercase;
 use Illuminate\Http\Request;
@@ -42,11 +43,11 @@ class CarsController extends Controller
     public function store(Request $request)
     {
 
-        $request->validate([
-            'name' => new Uppercase, // app.rule (php artisan make:rule name)
-            'founded' => 'required|integer|min:0|max:2021',  // int, 최소 , 최대
-            'description' => 'required',
-        ]);
+        // $request->validate([
+        //     'name' => new Uppercase, // app.rule (php artisan make:rule name)
+        //     'founded' => 'required|integer|min:0|max:2021',  // int, 최소 , 최대
+        //     'description' => 'required',
+        // ]);
 
         // If it's valid, it will proceed -> create method
         // If it's not valid, throw a ValidationException
@@ -59,10 +60,43 @@ class CarsController extends Controller
         // $car->description = $request->input('description');
         // $car->save();
 
+        // $request->validated();
+
+        //Methods we can use on $request
+        //guessExtension()
+        //getMineType()
+        //store()
+        //asStore()
+        //move()
+        //getClientOrigianlName()
+        //getClientMimeType()
+        //guessClientExtension
+        //getSize()
+        //getError()
+        //isValid()
+
+        // $test = $request->file('image')->guessExtension();
+        // dd($test);
+
+
+        // dd($request->all());
+
+        $request->validate([
+            'name' => 'required', // app.rule (php artisan make:rule name)
+            'founded' => 'required|integer|min:0|max:2021',  // int, 최소 , 최대
+            'description' => 'required',
+            'image' => 'required|mimes:jpg,png,jpeg|max:5048'
+        ]);
+
+        $newImageName = time() . '-' . $request->name . '.' . $request->image->extension();
+
+        $request->image->move(public_path('images'), $newImageName);
+
         Car::create([
             'name' => $request->input('name'),
             'founded' => $request->input('founded'),
             'description' => $request->input('description'),
+            'image_path' => $newImageName,
         ]);
 
         return redirect('/cars');
@@ -104,8 +138,11 @@ class CarsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CreateValidationRequest $request, $id)
     {
+
+        $request->validated();
+
         Car::where('id', $id)
             ->update([
                 'name' => $request->input('name'),
