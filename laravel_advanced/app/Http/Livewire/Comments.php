@@ -32,7 +32,7 @@ class Comments extends Component
     {
         $comment = Comment::find($commentId);
         // dd($comment);
-        Storage::disk('public')->delete('images/' . $comment->image);
+        Storage::disk('public')->delete('\s/' . $comment->image);
         $comment->delete();
 
         session()->flash('message', 'Comment deleted sucessfully');

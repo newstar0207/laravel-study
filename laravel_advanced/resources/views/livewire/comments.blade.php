@@ -7,7 +7,7 @@
 
     <section>
         @if ($image)
-            <img src="{{$image->temporaryUrl()}}" alt="" >
+            <img src="{{$image->temporaryUrl()}}" class="w-100 h-100">
         @endif
         <input type="file" id="image" wire:model="image" wire:loading.attr="disabled">
         <div wire:loading wire:target="image" class="text-red-500 ml-3">
@@ -51,16 +51,14 @@
             <div>
         </div>
 
-
             <!-- card footer -->
             <div class="bg-white border-gray-200 text-right">
                 <i wire:click="$emit('deleteClicked', {{ $comment->id }})"  class="fas fa-times text-red-200 cursor-pointer hover:text-red-600 ml-2 mt-2" ></i>
+                <i wire:click="$emit('openModal', 'edit-comment', {{ json_encode(["commentId" => $comment->id]) }})"  class="far fa-edit text-red-200 cursor-pointer hover:text-red-600 ml-2 mt-2" ></i>
             </div>
 
 
         </div>
-
-    {{-- </div> --}}
     @endforeach
 
     {{ $comments->links() }}
@@ -71,5 +69,5 @@
         if(confirm('Are you sure to delete?')) {
             window.Livewire.emit('delete', commentId);
         }
-    })
+    });
 </script>

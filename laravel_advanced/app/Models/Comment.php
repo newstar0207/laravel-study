@@ -24,6 +24,7 @@ class Comment extends Model
 
     public function getImagePathAttribute()
     {
+        // dd('storage/images/' . $this->image);
         return 'storage/images/' . $this->image;
     }
 }
