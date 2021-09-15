@@ -16,12 +16,23 @@ class Comments extends Component
     use WithFileUploads;
 
     public $image;
-
     public $newComment;
+    public $userId;
 
     protected $listeners = [
         'delete' => 'remove',
+        'commentUpdated' => 'getComments',
+        'userSelected',
     ];
+
+    public function userSelected($userId)
+    {
+        $this->userId = $userId;
+    }
+
+    public function getComments()
+    {
+    }
 
     // public function mount()
     // {
@@ -32,7 +43,7 @@ class Comments extends Component
     {
         $comment = Comment::find($commentId);
         // dd($comment);
-        Storage::disk('public')->delete('\s/' . $comment->image);
+        Storage::disk('public')->delete('images/' . $comment->image);
         $comment->delete();
 
         session()->flash('message', 'Comment deleted sucessfully');
@@ -45,9 +56,15 @@ class Comments extends Component
 
     public function render()
     {
-        return view('livewire.comments', [
-            'comments' => Comment::latest()->paginate(10),
-        ]);
+        if ($this->userId) {
+            return view('livewire.comments', [
+                'comments' => Comment::where('user_id', $this->userId)->latest()->paginate(10),
+            ]);
+        } else {
+            return view('livewire.comments', [
+                'comments' => Comment::latest()->paginate(10)
+            ]);
+        }
     }
 
     public function updated($propertyName)

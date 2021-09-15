@@ -1,4 +1,5 @@
 <div class="p-3">
+    @auth
     <div>
         @if (session()->has('message'))
             <div>{{ session('message') }}</div>
@@ -62,6 +63,7 @@
     @endforeach
 
     {{ $comments->links() }}
+    @endauth
 </div>
 
 <script>

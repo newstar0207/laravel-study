@@ -24,3 +24,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::get('/counter', function () {
     return view('livewire.home');
 });
+
+Route::post('/register', function () {
+    return view('auth.register');
+});
