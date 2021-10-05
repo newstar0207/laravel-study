@@ -17,10 +17,10 @@ class CreateChatMessagesTable extends Migration
             $table->id();
             $table->mediumText('message');
             $table->string('user_id');
-            $table->integer('chat_id');
+            $table->integer('chat_room_id');
             $table->timestamps();
-            $table->foreign('user_id')->references('users')->on('id');
-            $table->foreign('chat_id')->references('chatRooms')->on('id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('chat_room_id')->references('id')->on('chat_rooms');
         });
     }
 

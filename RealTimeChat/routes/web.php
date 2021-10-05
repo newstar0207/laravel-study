@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -14,6 +15,12 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/chat', [ChatController::class, 'index'])->name('chat');
+Route::middleware(['auth:sanctum', 'verified'])->get('chat/rooms', [ChatController::class, 'rooms']);
+Route::middleware(['auth:sanctum', 'verified'])->get('chat/room/{roomId}/messages', [ChatController::class, 'messages']);
+Route::middleware(['auth:sanctum', 'verified'])->post('chat/{roomId}/message', [ChatController::class, 'newMessage']);
+
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
