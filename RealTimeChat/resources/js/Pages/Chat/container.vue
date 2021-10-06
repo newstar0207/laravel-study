@@ -1,14 +1,18 @@
 <template>
     <app-layout>
+        <template #header>
+            <chat-room-selection :rooms = 'chatRooms' :currentRoom = 'currentRoom' v-on:roomChanged='setRoom($event)'></chat-room-selection>
+        </template>
         <h1>hihihihihii!!!! !~~!~!~!</h1>
         <message-container :messages='messages'></message-container>
-        <input-message></input-message>
+        <input-message :room = 'currentRoom' v-on:messagesent='getMessages'></input-message>
     </app-layout>
 </template>
 <script>
 import AppLayout from '@/Layouts/AppLayout.vue';
 import MessageContainer from './MessageContainer.vue';
 import InputMessage from './InputMessage.vue';
+import ChatRoomSelection from './ChatRoomSelection.vue'
 
 export default {
 
@@ -16,11 +20,12 @@ export default {
         AppLayout,
         MessageContainer,
         InputMessage,
+        ChatRoomSelection,
     },
     data() {
         return {
             chatRooms : [],
-            currentRoom : '',
+            currentRoom : {},
             messages: [],
         }
     },
@@ -38,7 +43,7 @@ export default {
                 });
         },
         getMessages() {
-            axios.get('/chat/room/' + this.currentRoom.id + '/messages')
+            axios.get('/chat/' + this.currentRoom.id + '/messages')
                 .then(response => {
                     this.messages = response.data;
                 })

@@ -46,6 +46,8 @@ class ChatController extends Controller
             'message' => $request->message,
         ]);
 
+
+        broadcast(/* 이벤트 객체*/)->toOthers();
         return $message;
     }
 }
