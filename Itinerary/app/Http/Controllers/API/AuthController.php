@@ -33,7 +33,7 @@ class AuthController extends BaseController
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Error validation', $validator->error());
+            return $this->sendError('Error validation', $validator->errors());
         }
 
         $input = $request->all();

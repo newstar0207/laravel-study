@@ -18,6 +18,7 @@ class CreateChatRoomsTable extends Migration
             $table->string('title');
             $table->string('owner');
             $table->timestamps();
+            $table->foreign('owner')->references('email')->on('users');
         });
     }
 
