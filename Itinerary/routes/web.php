@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\ChatController;
 use App\Http\Controllers\API\ChatRoomController;
 use App\Http\Controllers\roomController;
 use Illuminate\Foundation\Application;
@@ -34,5 +35,10 @@ Route::resource('chatroom', ChatRoomController::class)->only([
     'update', 'store', 'destroy', 'index'
 ]);
 
+Route::get('/room', [roomController::class, 'index'])->name('room');
+// Route::get('/chat/')
+// Route::get('/chat/{$id}', [ChatController::class, 'index']);
 
-Route::get('/room', [roomController::class, 'index']);
+Route::resource('chatroom.chat', ChatController::class)->only([
+    'index', 'store'
+]);

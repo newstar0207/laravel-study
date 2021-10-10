@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Events\RoomCreated;
 use App\Models\ChatRoom;
+use Dflydev\DotAccessData\Data;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -18,9 +19,11 @@ class ChatRoomController extends BaseController
 
     public function store(Request $request)
     {
+
         $validator = Validator::make($request->all(), [
             'title' => 'required',
         ]);
+
 
         if ($validator->fails()) {
             return $this->sendError('Error validation', $validator->errors());
@@ -66,4 +69,11 @@ class ChatRoomController extends BaseController
 
         return $this->sendResponse(null, 'created new ChatRoom');
     }
+
+    // public function show($id)
+    // {
+    //     $chat = ChatRoom::find($id)->chats();
+
+    //     return $this->sendResponse($chat, 'room chat');
+    // }
 }
