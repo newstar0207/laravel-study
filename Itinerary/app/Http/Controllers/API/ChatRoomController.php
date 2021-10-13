@@ -16,6 +16,11 @@ class ChatRoomController extends BaseController
         return ChatRoom::all();
     }
 
+    public function rand_color()
+    {
+        return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+    }
+
 
     public function store(Request $request)
     {
@@ -23,21 +28,23 @@ class ChatRoomController extends BaseController
         $validator = Validator::make($request->all(), [
             'title' => 'required',
         ]);
+        // 1. 테이블을 하나 더 만들어 기록함! -> 검색해서 들어감 -> 암호입력 -> 암호맞으면 디비에 저장 -> 다음에 프린트 all 해서 씀 -> 굳
+        // 2. 프린트 할때 만든 테이블 리스트를 프린트함!
 
+        // 0. hex code로 검색(room_color, string) -> 결과에 맞는 방 나옴 -> 클릭해서 입장
 
         if ($validator->fails()) {
             return $this->sendError('Error validation', $validator->errors());
         }
 
+        $room_color = $this->rand_color();
+
         $room = new ChatRoom;
         $room->title = $request->title;
         $room->owner = Auth::user()->name;
+        $room->room_color = $room_color;
         $room->save();
         $success['room'] = $room;
-
-
-        // 이벤트를 같은 채널의 다른 사용자에게 브로드캐스트
-        // broadcast(new RoomCreated($room))->toOthers();
 
         return $this->sendResponse($success, 'created new ChatRoom');
     }

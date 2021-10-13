@@ -9,6 +9,7 @@
 
         <form onsubmit="event.preventDefault()" @keyup.enter="createNewRoom()">
             <input type="text" v-model="title">
+            <input type="password" v-model='password'>
             <button @click="createNewRoom()">save</button>
         </form>
 
@@ -28,8 +29,10 @@ export default {
         return{
             roomList : [],
             title : '',
+            password: '',
             click : false,
-            chatInfo : {}
+            chatInfo : {},
+
         }
     },
     created() {
@@ -46,6 +49,7 @@ export default {
         createNewRoom() {
             axios.post('/chatroom', {
                 title : this.title,
+                password : this.password,
                 }).then(response => {
                     console.log('ok')
                 })

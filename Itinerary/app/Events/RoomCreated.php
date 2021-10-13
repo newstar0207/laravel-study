@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\ChatRoom;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -15,14 +16,16 @@ class RoomCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $room;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(ChatRoom $room)
     {
-        //
+        $this->room = $room;
     }
 
     /**
@@ -32,6 +35,11 @@ class RoomCreated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        // return new Channel('new-room')->toOthers();
+        return new Channel('newRoom');
+    }
+
+    public function broadcastAs()
+    {
+        return 'newRoom.created';
     }
 }
