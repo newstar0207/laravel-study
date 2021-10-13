@@ -4,7 +4,8 @@
             <chat-room-selection :rooms = 'chatRooms' :currentRoom = 'currentRoom' v-on:roomChanged='setRoom($event)'></chat-room-selection>
         </template>
         <h1>hihihihihii!!!! !~~!~!~!</h1>
-        <message-container :messages='messages'></message-container>
+        <styled-message-container :message='messages'></styled-message-container>
+        <!-- <message-container :messages='messages'></message-container> -->
         <input-message :room = 'currentRoom' v-on:messagesent='getMessages'></input-message>
     </app-layout>
 </template>
@@ -13,6 +14,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import MessageContainer from './MessageContainer.vue';
 import InputMessage from './InputMessage.vue';
 import ChatRoomSelection from './ChatRoomSelection.vue'
+import StyledMessageContainer from './StyledMessageContainer.vue'
 
 export default {
 
@@ -21,6 +23,8 @@ export default {
         MessageContainer,
         InputMessage,
         ChatRoomSelection,
+        StyledMessageContainer,
+
     },
     data() {
         return {
@@ -53,11 +57,30 @@ export default {
         },
         setRoom(room){
             this.currentRoom = room;
+            // this.getMessages();
+        },
+        disconnect(room) {
+            window.Echo.leave('chat.' + room.id);
+        },
+        connect() {
             this.getMessages();
+            const vm = this;
+            window.Echo.private('chat.' + this.currentRoom.id) // -> 채널연결
+                .listen('.message.new', (e) => { // -> 메시지 받음
+                    vm.getMessages();
+                })
         }
     },
     created() {
         this.getRooms();
+    },
+    watch: {
+        currentRoom(val, oldVal) {
+            if(oldVal){
+                this.disconnect(oldVal);
+            }
+            this.connect();
+        }
     }
 
 }

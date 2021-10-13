@@ -19,9 +19,11 @@ class NewChatMessage implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct()
+    private $roomId;
+
+    public function __construct($roomId)
     {
-        //
+        $this->roomId = $roomId;
     }
 
     /**
@@ -31,6 +33,11 @@ class NewChatMessage implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new PrivateChannel('chat.' . $this->roomId);
+    }
+
+    public function broadcastAs()
+    {
+        return 'message.new'; // 브로드캐스트 이름을 변경
     }
 }
