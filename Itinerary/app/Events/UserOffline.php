@@ -2,30 +2,28 @@
 
 namespace App\Events;
 
-use App\Models\ChatRoom;
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class RoomCreated implements ShouldBroadcast
+class UserOffline
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    public $room;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(ChatRoom $room)
+    public function __construct(User $user, $roomId)
     {
-        $this->room = $room;
+        $this->user = $user;
+        $this->roomId = $roomId;
     }
 
     /**
@@ -35,11 +33,6 @@ class RoomCreated implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('newRoom');
-    }
-
-    public function broadcastAs()
-    {
-        return 'newRoom.created';
+        return new PresenceChannel('chat-room.' + $this->roomId);
     }
 }

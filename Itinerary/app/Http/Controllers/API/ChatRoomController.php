@@ -32,7 +32,6 @@ class ChatRoomController extends BaseController
         // 2. 프린트 할때 만든 테이블 리스트를 프린트함!
 
         // 0. hex code로 검색(room_color, string) -> 결과에 맞는 방 나옴 -> 클릭해서 입장
-
         if ($validator->fails()) {
             return $this->sendError('Error validation', $validator->errors());
         }
@@ -77,10 +76,8 @@ class ChatRoomController extends BaseController
         return $this->sendResponse(null, 'created new ChatRoom');
     }
 
-    // public function show($id)
-    // {
-    //     $chat = ChatRoom::find($id)->chats();
-
-    //     return $this->sendResponse($chat, 'room chat');
-    // }
+    public function show($id)
+    {
+        // hex code로 검색(room_color, string) -> 결과에 맞는 방 나옴 -> return 해주고 프런트에서 입장
+    }
 }

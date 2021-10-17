@@ -22008,14 +22008,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['chatInfo'],
+  props: ['chatInfo', 'user'],
   data: function data() {
     return {
       chats: [],
-      chat: ''
+      chat: '',
+      roomId: this.chatInfo.id,
+      friend: []
     };
   },
-  mounted: function mounted() {
+  created: function created() {
     var _this = this;
 
     axios.get('/chatroom/' + this.chatInfo.id + '/chat').then(function (response) {
@@ -22025,9 +22027,31 @@ __webpack_require__.r(__webpack_exports__);
       console.error(error);
     });
   },
+  mounted: function mounted() {
+    var _this2 = this;
+
+    Echo.join('chat-room.' + this.roomId) // 연결
+    .joining(function (user) {
+      // 다른사람이 들어옴
+      _this2.changeState(user, 'Online', _this2.roomId);
+    }).leaving(function (user) {
+      // 나감
+      _this2.changeState(user, 'Offline', _this2.roomId);
+    }).listen('UserOnline', function (e) {
+      // 현재 있음
+      _this2.friend = e.user;
+    }).listen('UserOffline', function (e) {
+      // 현재 없음
+      _this2.friend = e.user;
+    }).listen('NewChat', function (e) {
+      _this2.chats.push(e.chat);
+
+      console.log('dddddddd');
+    });
+  },
   methods: {
     createNewChat: function createNewChat() {
-      axios.post('/chatroom/' + this.chatInfo.id + '/chat', {
+      axios.post('/chatroom/' + this.roomId + '/chat', {
         chat: this.chat
       }).then(function (response) {
         console.log(response);
@@ -22035,6 +22059,13 @@ __webpack_require__.r(__webpack_exports__);
         console.error(error);
       });
       this.chat = '';
+    },
+    changeState: function changeState(user, state, roomId) {
+      axios.put('/user/' + user + '/' + state + '/' + roomId).then(function (response) {
+        console.log(response.data);
+      })["catch"](function (error) {
+        console.error(error);
+      });
     }
   }
 });
@@ -22058,6 +22089,7 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     ChatRoom: _ChatRoom_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
+  props: ['user'],
   data: function data() {
     return {
       roomList: [],
@@ -22070,6 +22102,8 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
+    // this.user = this.user;
+    console.log(this.user);
     axios.get('/chatroom').then(function (response) {
       _this.roomList = response.data;
       console.log(response.data);
@@ -22088,7 +22122,7 @@ __webpack_require__.r(__webpack_exports__);
         console.error(error);
       });
     },
-    openChatRoom: function openChatRoom(room) {
+    openChatRoom: function openChatRoom(room, user) {
       this.chatInfo = room;
       this.click = true;
     }
@@ -26593,7 +26627,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       key: room.id
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
       onClick: function onClick($event) {
-        return $options.openChatRoom(room);
+        return $options.openChatRoom(room, $props.user);
       }
     }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(room.title), 9
     /* TEXT, PROPS */
@@ -26626,10 +26660,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, "save")], 32
   /* HYDRATE_EVENTS */
   ), $data.click ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_chat_room, {
-    chatInfo: $data.chatInfo
+    chatInfo: $data.chatInfo,
+    user: $props.user
   }, null, 8
   /* PROPS */
-  , ["chatInfo"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
+  , ["chatInfo", "user"])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
 }
 
 /***/ }),

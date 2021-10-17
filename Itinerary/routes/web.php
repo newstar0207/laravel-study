@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\ChatController;
 use App\Http\Controllers\API\ChatRoomController;
+use App\Http\Controllers\API\UserStateController;
 use App\Http\Controllers\roomController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -42,3 +43,5 @@ Route::get('/room', [roomController::class, 'index'])->name('room');
 Route::resource('chatroom.chat', ChatController::class)->only([
     'index', 'store'
 ]);
+
+Route::middleware(['auth:sanctum', 'verified'])->put('/user/{id}/{state}/{roomId}', UserStateController::class);

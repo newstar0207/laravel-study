@@ -3,7 +3,7 @@
         h2h2
         <div v-if="roomList[0]">
             <div v-for="room in roomList" :key="room.id">
-                <div @click="openChatRoom(room)"> {{ room.title }}</div>
+                <div @click="openChatRoom(room, user)"> {{ room.title }}</div>
             </div>
         </div>
 
@@ -14,17 +14,21 @@
         </form>
 
         <div v-if="click">
-            <chat-room v-bind:chatInfo = chatInfo></chat-room>
+            <chat-room v-bind:chatInfo = chatInfo v-bind:user = user></chat-room>
         </div>
 
     </div>
 </template>
+
 <script>
 import ChatRoom from './ChatRoom.vue';
 export default {
     components: {
         ChatRoom
     },
+    props: [
+        'user',
+    ],
     data() {
         return{
             roomList : [],
@@ -32,10 +36,11 @@ export default {
             password: '',
             click : false,
             chatInfo : {},
-
         }
     },
     created() {
+        // this.user = this.user;
+        console.log(this.user);
         axios.get('/chatroom')
             .then(response => {
                 this.roomList = response.data
@@ -57,9 +62,10 @@ export default {
                     console.error(error)
                 })
         },
-        openChatRoom(room){
+        openChatRoom(room, user){
             this.chatInfo = room;
             this.click = true;
+
         }
     }
 }

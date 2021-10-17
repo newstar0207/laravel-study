@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class roomController extends Controller
 {
     public function index()
     {
-        return Inertia::render('Room/RoomList');
+        $user = Auth::user();
+        return Inertia::render('Room/RoomList', [
+            'user' => $user,
+        ]);
     }
 }
