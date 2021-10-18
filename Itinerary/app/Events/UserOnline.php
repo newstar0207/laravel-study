@@ -15,6 +15,9 @@ class UserOnline implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $user;
+    public $roomId;
+
     /**
      * Create a new event instance.
      *
@@ -33,6 +36,6 @@ class UserOnline implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PresenceChannel('chat-room.' + $this->roomId);
+        return new PresenceChannel('chat-room.' . $this->roomId);
     }
 }

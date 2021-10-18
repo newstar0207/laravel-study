@@ -11,7 +11,7 @@ class roomController extends Controller
     public function index()
     {
         $user = Auth::user();
-        return Inertia::render('Room/RoomList', [
+        return Inertia::render('Container', [
             'user' => $user,
         ]);
     }

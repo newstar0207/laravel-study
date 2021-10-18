@@ -15,6 +15,9 @@ class UserOffline
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $user;
+    public $roomId;
+
     /**
      * Create a new event instance.
      *
@@ -23,7 +26,7 @@ class UserOffline
     public function __construct(User $user, $roomId)
     {
         $this->user = $user;
-        $this->roomId = $roomId;
+        $this->roomId = (int)$roomId;
     }
 
     /**
@@ -33,6 +36,6 @@ class UserOffline
      */
     public function broadcastOn()
     {
-        return new PresenceChannel('chat-room.' + $this->roomId);
+        return new PresenceChannel('chat-room.'  . $this->roomId);
     }
 }

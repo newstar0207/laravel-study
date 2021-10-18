@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\UserOffline;
 use App\Events\UserOnline;
 use App\Http\Controllers\Controller;
 use App\Models\User;
@@ -15,8 +16,11 @@ class UserStateController extends Controller
         $user->state = $state;
         $user->save();
 
-
-
-        broadcast(new User . $state($user, $roomId));
+        if ($state == 'Online') {
+            broadcast(new UserOnline($user, $roomId));
+        }
+        if ($state == 'Offline') {
+            broadcast(new UserOffline($user, $roomId));
+        }
     }
 }
