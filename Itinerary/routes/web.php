@@ -45,3 +45,5 @@ Route::resource('chatroom.chat', ChatController::class)->only([
 ]);
 
 Route::middleware(['auth:sanctum', 'verified'])->put('/user/{id}/{state}/{roomId}', UserStateController::class);
+
+Route::inertia('/style', 'Room/StyledChatRoom');
