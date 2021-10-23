@@ -28,7 +28,9 @@
         "vue-loader": "^16.1.2"
     },
     "dependencies": {
+        "eslint": "^8.0.1",
         "laravel-echo": "^1.11.2",
-        "pusher-js": "^7.0.3"
+        "pusher-js": "^7.0.3",
+        "vuex": "^4.0.2"
     }
 }

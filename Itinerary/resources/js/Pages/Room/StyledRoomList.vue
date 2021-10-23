@@ -41,7 +41,7 @@
     </div>
 
     <!-- for 문 필요 -->
-    <div v-if="roomList[0]">
+    <div v-if="roomList != null">
         <div v-for="room in roomList" :key="room.id">
             <room-item :room= 'room' :user = 'user' @click="openChatRoom(room)"/>
         </div>
@@ -89,16 +89,16 @@ export default {
             roomList : [],
             title : '',
             password: '',
-            currentRoom : {},
+            // currentRoom : {},
         }
     },
-    created() {
+    beforeCreate() {
         // this.user = this.user;
         console.log(this.user);
         axios.get('/chatroom')
             .then(response => {
-                this.roomList = response.data
-                console.log(response.data, 'roomList ...')
+                this.$store.commit('setRoomList', response.data)
+                this.roomList = this.$store.getters.getRoomList;
             })
             .catch(error => {
                 console.error(error)
@@ -117,9 +117,13 @@ export default {
                 })
         },
         openChatRoom(room){
-            this.currentRoom = room;
+            console.log('clicked ...')
+            // this.currentRoom = room;
+            this.$store.commit('openChatRoom', room);
+            // this.currentRoom = this.$store.getters.getCurrentRoom;
         },
     },
+
 }
 </script>
 <style>

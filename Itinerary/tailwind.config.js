@@ -22,6 +22,9 @@ module.exports = {
                 // Complex site-specific column configuration
                'footer': '200px minmax(900px, 1fr) 100px',
             },
+            backgroundImage: {
+                'main-background' : "url('/storage/main-background.jpg')",
+            }
         },
     },
 

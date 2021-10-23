@@ -2,17 +2,17 @@
     <div>
         <div v-if="roomList[0]">
             <div v-for="room in roomList" :key="room.id">
-                <div @click="openChatRoom(room)"> {{ room.title }}</div>
+                <div @click="openChatRoom(room)"></div>
             </div>
         </div>
 
 
         <!-- 방 만들기 -->
-        <form @submit.prevent='createNewRoom()' @keyup.enter="createNewRoom()">
+        <!-- <form @submit.prevent='createNewRoom()' @keyup.enter="createNewRoom()">
             <input type="text" v-model="title">
             <input type="password" v-model='password'>
             <button>save</button>
-        </form>
+        </form> -->
 
         <!-- <form onsubmit="event.preventDefault()" @keyup.enter="createNewRoom()">
             <input type="text" v-model="title">
@@ -20,9 +20,9 @@
             <button @click="createNewRoom()">save</button>
         </form> -->
 
-        <div v-if="currentRoom.id">
+        <!-- <div v-if="currentRoo">
             <chat-room v-bind:currentRoom = 'currentRoom' v-bind:user = 'user'></chat-room>
-        </div>
+        </div> -->
 
     </div>
 </template>
@@ -41,7 +41,7 @@ export default {
             roomList : [],
             title : '',
             password: '',
-            currentRoom : {},
+            currentRoom : this.$store.state.currentRoom,
         }
     },
     created() {
@@ -69,7 +69,8 @@ export default {
                 })
         },
         openChatRoom(room){
-            this.currentRoom = room;
+            // this.currentRoom = room;
+            this.$store.commit('openChatRoom', room)
         },
     },
 

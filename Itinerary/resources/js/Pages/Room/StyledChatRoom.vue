@@ -1,5 +1,6 @@
 <template>
-    <div>
+    <div></div>
+    <!-- <div>
         <div>
             <div class="flex flex-row items-center py-4 px-6 rounded-2xl shadow">
                 <div class="flex items-center justify-center h-10 w-10 rounded-full bg-pink-500 text-pink-100">T</div>
@@ -35,15 +36,15 @@
 
         <div class="h-full overflow-hidden py-4">
             <div class="h-full overflow-y-auto">
-                <div>
+                <div v-if="this.chatItem">
 
                        <!-- 채팅있던 자리 -->
-                       <styled-chat></styled-chat>
+              <!--         <styled-chat></styled-chat>
                 </div>
             </div>
         </div>
     </div>
-    </div>
+    </div> -->
 </template>
 <script>
 import StyledChat from './StyledChat.vue';
@@ -51,6 +52,28 @@ export default {
     components :{
         StyledChat,
     },
+    data() {
+        return {
+            currentRoom : {},
+            chatItem = false,
+        }
+    },
+    created(){
+        this.currentRoom = this.$store.getters.getCurrentRoom
+    },
+    mounted() {
+        console.log(this.currentRoom)
+        axios.get('/chatroom/' + this.currentRoom.id + '/chat')
+            .then(response => {
+                console.log(response.data.data)
+                // this.chats = response.data.data
+                this.$store.commit('setChat', response.data.data);
+                this.chatItem = true;
+            })
+            .catch(error => {
+                console.error(error)
+            })
+    }
 }
 </script>
 

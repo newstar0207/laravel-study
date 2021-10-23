@@ -10,6 +10,7 @@ class roomController extends Controller
 {
     public function index()
     {
+        // dd(asset('storage/main-background.jpg'));
         $user = Auth::user();
         return Inertia::render('Container', [
             'user' => $user,
