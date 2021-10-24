@@ -17,6 +17,7 @@ use Inertia\Inertia;
 */
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/chat', [ChatController::class, 'index'])->name('chat');
+Route::middleware(['auth:sanctum', 'verified'])->get('/chat2', [ChatController::class, 'index2'])->name('chat2');
 Route::middleware(['auth:sanctum', 'verified'])->get('chat/rooms', [ChatController::class, 'rooms']);
 Route::middleware(['auth:sanctum', 'verified'])->get('chat/{roomId}/messages', [ChatController::class, 'messages']);
 Route::middleware(['auth:sanctum', 'verified'])->post('chat/{roomId}/message', [ChatController::class, 'newMessage']);
