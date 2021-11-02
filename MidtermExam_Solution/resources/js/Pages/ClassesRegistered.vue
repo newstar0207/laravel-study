@@ -14,12 +14,13 @@
         <div>
             <pagination :links = "Subjects.links"/>
         </div> -->
-        {{  Subjects }}
+
         <table>
             <thead>
                 <tr>
                     <th>과목명</th>
                     <th>학점</th>
+                    <th>수강신청자 수</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,6 +32,9 @@
                     </td>
                     <td>
                         <p>{{ subject.credit }}</p>
+                    </td>
+                    <td>
+                        <p>{{ subject.users.length }}</p>
                     </td>
                 </tr>
             </tbody>
@@ -53,9 +57,6 @@ export default {
         Pagination,
         AppLayout,
         Link,
-    },
-    created() {
-        // console.log(this.$page.props.user, 'props');
     }
 }
 </script>
