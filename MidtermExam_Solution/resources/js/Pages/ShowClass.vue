@@ -30,8 +30,8 @@
                 <div>{{ subject.updated_at}}</div>
             </div>
             <div>
-                <button class="bg-blue-500" @click="open_update_modal">수정</button>
-                <button class="bg-blue-500" @click="delete_class">삭제</button>
+                <button class="bg-blue-500"  v-if="$page.props.isAdmin" @click="open_update_modal">수정</button>
+                <button class="bg-blue-500" v-if="$page.props.isAdmin"  @click="delete_class">삭제</button>
                 <button class="bg-blue-500" v-if="registeredClass==false" @click="register_class">수강신청</button>
                 <button class="bg-blue-500" v-if='registeredClass==true' @click="unregister_class">수강취소</button>
             </div>

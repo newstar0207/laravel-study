@@ -25,8 +25,11 @@
                                 <jet-nav-link :href="route('classes.index')" :active="route().current('classes.index')">
                                     교과목 목록
                                 </jet-nav-link>
-                                <jet-nav-link :href="route('classes.create')" :active="route().current('classes.create')">
+                                <jet-nav-link v-if="$page.props.isAdmin" :href="route('classes.create')" :active="route().current('classes.create')">
                                     교과목 등록
+                                </jet-nav-link>
+                                <jet-nav-link :href="route('classes.index_cr')" :active="route().current('classes.index_cr')">
+                                    수강목록
                                 </jet-nav-link>
                             </div>
                         </div>

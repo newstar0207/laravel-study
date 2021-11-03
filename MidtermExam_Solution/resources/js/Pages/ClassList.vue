@@ -1,29 +1,15 @@
 <template>
     <app-layout>
-        <!-- <h1>교과목 리스트</h1>
-        {{  Subjects.links }}
-
-        <div v-for="subject in Subjects.data" :key="subject.id">
-            <div class="border-10 border-black">
-                과목명
-                <div> {{ subject.name }}</div>
-                학점
-                <div> {{ subject.credit }}</div>
-            </div>
-        </div>
-        <div>
-            <pagination :links = "Subjects.links"/>
-        </div> -->
-        {{  Subjects }}
         <table>
             <thead>
                 <tr>
                     <th>과목명</th>
                     <th>학점</th>
+                    <th v-if="$page.props.isAdmin" @click="sort">수강자 수</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="subject in Subjects.data" :key="subject.id" >
+                <tr v-for="subject in subjectList" :key="subject.id" >
                     <td>
                         <p>
                             <Link :href="'/classes/show/' + subject.id">{{ subject.name}}</Link>
@@ -32,10 +18,16 @@
                     <td>
                         <p>{{ subject.credit }}</p>
                     </td>
+                    <td v-if="$page.props.isAdmin">
+                        <Link v-if="$page.props.isAdmin" :href="'/classes/users/' + subject.id" method='get' type="button">
+                            {{ subject.users.length }}
+                        </Link>
+                    </td>
                 </tr>
             </tbody>
         </table>
         <div>
+            <!-- {{  Subjects.links }} -->
             <pagination :links='Subjects.links'></pagination>
         </div>
 
@@ -54,8 +46,25 @@ export default {
         AppLayout,
         Link,
     },
-    created() {
-        // console.log(this.$page.props.user, 'props');
+    data() {
+        return{
+            subjectList : this.Subjects.data,
+            toggle : true,
+        }
+    },
+    methods : {
+        sort(){
+            // console.log('click');
+            let vm = this;
+            this.subjectList.sort(function(s1, s2) {
+                if (vm.toggle) {
+                    return s1.users.length - s2.users.length;
+                }else {
+                    return s2.users.length - s1.users.length;
+                }
+            });
+            this.toggle = !this.toggle;
+        }
     }
 }
 </script>

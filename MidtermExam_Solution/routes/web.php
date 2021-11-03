@@ -40,4 +40,5 @@ Route::prefix('classes')->group(function () {
     Route::patch('update/{classId}', [ClassesController::class, 'update'])->name('classes.update'); // 교과목 변경
     Route::delete('delete/{classId}', [ClassesController::class, 'destroy'])->name('classes.destroy'); //교과목 삭제
     Route::post('/register/{classId}', [ClassesController::class, 'register'])->name('classes.register'); // 수강신청 및 수강취소
+    Route::get('/users/{classId}', [ClassesController::class, 'users'])->name('classes.users'); // 수강신청한 사용자 리스트
 });

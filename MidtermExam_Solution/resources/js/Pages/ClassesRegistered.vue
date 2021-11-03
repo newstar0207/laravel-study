@@ -1,20 +1,17 @@
 <template>
     <app-layout>
-        <!-- <h1>교과목 리스트</h1>
-        {{  Subjects.links }}
-
-        <div v-for="subject in Subjects.data" :key="subject.id">
-            <div class="border-10 border-black">
-                과목명
-                <div> {{ subject.name }}</div>
-                학점
-                <div> {{ subject.credit }}</div>
+        <template #header>
+            <div>
+                수강 교과목 리스트
             </div>
-        </div>
-        <div>
-            <pagination :links = "Subjects.links"/>
-        </div> -->
-
+            <h2>
+                수강과목 수 : {{ numOfRegisteredClasses }}
+            </h2>
+            <h2>
+                수강학점 : {{ totalCredits }}
+            </h2>
+        </template>
+        <!-- {{  subjects }} -->
         <table>
             <thead>
                 <tr>
@@ -24,7 +21,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="subject in Subjects.data" :key="subject.id" >
+                <tr v-for="subject in subjects" :key="subject.id" >
                     <td>
                         <p>
                             <Link :href="'/classes/show/' + subject.id">{{ subject.name}}</Link>
@@ -34,29 +31,49 @@
                         <p>{{ subject.credit }}</p>
                     </td>
                     <td>
-                        <p>{{ subject.users.length }}</p>
+                        <!-- <p>{{ subject.users.length }}</p> -->
+                        <Link :href="'/classes/users/' + subject.id" method="get" type="button">
+                            {{ subject.users.length }}
+                        </Link>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <div>
+        <!-- <div>
             <pagination :links='Subjects.links'></pagination>
-        </div>
+        </div> -->
 
     </app-layout>
 </template>
 <script>
 
-import Pagination from './Pagination.vue'
+// import Pagination from './Pagination.vue'
 import AppLayout from '@/Layouts/AppLayout.vue'
 import { Link } from '@inertiajs/inertia-vue3'
 
 export default {
-    props: ['Subjects'],
+    props: ['subjects'],
     components : {
-        Pagination,
+        // Pagination,
         AppLayout,
         Link,
+    },
+    data(){
+        return {
+
+        }
+    },
+    computed : {
+        numOfRegisteredClasses() {
+            return this.subjects.length;
+        },
+        totalCredits() {
+            let sum = 0;
+            for ( let i = 0; i < this.subjects.length; i++){
+                sum += parseInt(this.subjects[i].credit);
+            }
+            return sum;
+        }
     }
 }
 </script>
