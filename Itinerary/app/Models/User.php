@@ -60,8 +60,13 @@ class User extends Authenticatable
     ];
 
 
-    public function chatRooms()
+    public function chats()
     {
-        return $this->belongsToMany(ChatRoom::class);
+        return $this->hasMany(Chat::class);
+    }
+
+    public function rooms()
+    {
+        return $this->belongsToMany(Room::class);
     }
 }

@@ -15,12 +15,13 @@ class CreateChatsTable extends Migration
     {
         Schema::create('chats', function (Blueprint $table) {
             $table->id();
-            $table->string('chat');
-            $table->unsignedBigInteger('chat_room_id');
-            $table->unsignedBigInteger('user_id');
             $table->timestamps();
-            $table->foreign('chat_room_id')->references('id')->on('chat_rooms');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->integer('user_id');
+            $table->integer('room_id');
+            $table->string('chat');
+            $table->string('image')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
         });
     }
 

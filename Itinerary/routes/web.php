@@ -32,18 +32,13 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
 
-Route::resource('chatroom', ChatRoomController::class)->only([
-    'update', 'store', 'destroy', 'index'
-]);
+Route::get('home', function () {
+    return Inertia::render('Container');
+});
 
-Route::get('/room', [roomController::class, 'index'])->name('room');
-// Route::get('/chat/')
-// Route::get('/chat/{$id}', [ChatController::class, 'index']);
-
-Route::resource('chatroom.chat', ChatController::class)->only([
-    'index', 'store'
-]);
-
-Route::middleware(['auth:sanctum', 'verified'])->put('/user/{id}/{state}/{roomId}', UserStateController::class);
-
-Route::inertia('/style', 'Room/StyledChatRoom');
+Route::prefix('room')->group(function () {
+    Route::get('/', [RoomController::class, 'index'])->name('room.index');
+    Route::post('/', [Roomcontroller::class, 'store'])->name('room.store');
+    Route::get('/{roomId}', [RoomController::class, 'show'])->name('room.show');
+    Route::patch('/{roomId}', [RoomController::class], 'update')->name('room.update');
+});

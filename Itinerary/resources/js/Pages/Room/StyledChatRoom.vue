@@ -38,8 +38,8 @@
             <div class="h-full overflow-y-auto">
                 <div v-if="this.chatItem">
 
-                       <!-- 채팅있던 자리 -->
-              <!--         <styled-chat></styled-chat>
+
+                      <styled-chat></styled-chat>
                 </div>
             </div>
         </div>
@@ -50,30 +50,30 @@
 import StyledChat from './StyledChat.vue';
 export default {
     components :{
-        StyledChat,
+        // StyledChat,
     },
     data() {
-        return {
-            currentRoom : {},
-            chatItem = false,
-        }
+        // return {
+        //     currentRoom : {},
+        //     chatItem = false,
+        // }
     },
     created(){
-        this.currentRoom = this.$store.getters.getCurrentRoom
+        // this.currentRoom = this.$store.getters.getCurrentRoom
     },
-    mounted() {
-        console.log(this.currentRoom)
-        axios.get('/chatroom/' + this.currentRoom.id + '/chat')
-            .then(response => {
-                console.log(response.data.data)
-                // this.chats = response.data.data
-                this.$store.commit('setChat', response.data.data);
-                this.chatItem = true;
-            })
-            .catch(error => {
-                console.error(error)
-            })
-    }
+    // mounted() {
+    //     console.log(this.currentRoom)
+    //     axios.get('/chatroom/' + this.currentRoom.id + '/chat')
+    //         .then(response => {
+    //             console.log(response.data.data)
+    //             // this.chats = response.data.data
+    //             this.$store.commit('setChat', response.data.data);
+    //             this.chatItem = true;
+    //         })
+    //         .catch(error => {
+    //             console.error(error)
+    //         })
+    // }
 }
 </script>
 

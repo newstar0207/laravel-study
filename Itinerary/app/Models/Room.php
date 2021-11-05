@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ChatRoom extends Model
+class Room extends Model
 {
     use HasFactory;
 
@@ -14,13 +14,23 @@ class ChatRoom extends Model
         return $this->hasMany(Chat::class);
     }
 
+    public function cost()
+    {
+        return $this->hasOne(Cost::class);
+    }
+
     public function users()
     {
         return $this->belongsToMany(User::class);
     }
 
-    // public function chatsers()
-    // {
-    //     return $this->belongsToMany(User::class);
-    // }
+    public function schedules()
+    {
+        return $this->hasMany(Schedule::class);
+    }
+
+    public function materials()
+    {
+        return $this->hasMany(Material::class);
+    }
 }
