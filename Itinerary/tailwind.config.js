@@ -1,4 +1,6 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
+const path = require('path');
+const colors = require('tailwindcss/colors');
 
 module.exports = {
     mode: 'jit',
@@ -8,6 +10,7 @@ module.exports = {
         './storage/framework/views/*.php',
         './resources/views/**/*.blade.php',
         './resources/js/**/*.vue',
+        path.resolve(__dirname, './node_modules/litepie-datepicker/**/*.js'),
     ],
 
     theme: {
@@ -24,6 +27,18 @@ module.exports = {
             },
             backgroundImage: {
                 'main-background' : "url('/storage/main-background.jpg')",
+            },
+            colors: {
+                // Change with you want it
+                'litepie-primary': colors.lightBlue, // color system for light mode
+                'litepie-secondary': colors.coolGray // color system for dark mode
+              }
+        },
+        variants: {
+            extend: {
+              cursor: ['disabled'],
+              textOpacity: ['disabled'],
+              textColor: ['disabled']
             }
         },
     },

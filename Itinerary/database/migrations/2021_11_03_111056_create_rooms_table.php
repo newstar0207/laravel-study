@@ -17,8 +17,11 @@ class CreateRoomsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->string('title')->nullable()->default('travel');
-            $table->string('password');
-            $table->date('period');
+            $table->string('password'); // 방 코드
+            $table->date('start_period');
+            $table->date('end_period');
+            $table->string('owner');
+            $table->foreign('owner')->references('name')->on('users')->onDelete('cascade');
         });
     }
 

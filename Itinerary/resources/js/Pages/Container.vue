@@ -1,39 +1,78 @@
 <template>
+    <container-layout>
 
-    this is container
-    <div class="border-2">
-        {{  this.$page.props.user }}
-    </div>
+        this is container
+        <!-- <div class="p-6 sm:px-20 bg-white border-b border-gray-200"> -->
+            {{  this.$page.props.user }}
+
+            <!-- 방만들기 -->
+
+            <div class="py-12">
+                <div class="bg-white shadow-xl sm:rounded-lg h-300">
+                        <form @submit.prevent="submit()">
+                        <label>title</label>
+                        <input id="title" required class="border-2 border-gray-300" v-model="form.title" />
+                        <label>period</label>
+                        <date-picker @period='periodPicker'></date-picker>
+                        <!-- {{ period }} -->
+                        <!-- <input id="period" required class="border-2 border-gray-300" v-model="form.period" /> -->
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-400">Submit</button>
+                    </form>
+                </div>
+            </div>
+
+        <!-- 모든 방 리스트 -->
+            <!-- <div>{{ roomList }} : roomList</div> -->
+            <div>
+                <div v-for="room in roomList" :key="room.id" @click="openChatRoom(room)">
+                    {{  room.title }}
+                </div>
+            </div>
+
+    </container-layout>
 </template>
 <script>
 import Navi from './Room/Navi.vue'
+import ContainerLayout from '../Layouts/ContainerLayout.vue'
+import DatePicker from './DatePicker.vue'
+import { reactive } from 'vue'
+import { Inertia } from '@inertiajs/inertia'
 export default {
-
-    props : [
-        'allChatRoom',
-        'user'
-    ],
     components : {
-        // RoomList,
-        // SidebarNavi,
-        // StyledRoomList,
-        // StyledChatRoom,
-        // Navi,
+        ContainerLayout,
+        Navi,
+        DatePicker,
     },
-    mounted() {
-        // this.$store.commit('setUser', this.user);
-        // console.log(this.$store.state.index.user, 'user...');
-        // console.log(this.$store.commit('getUser'), 'getUSer');
-    }
+    props : [
+        'dateValue',
+        'roomList',
+    ],
+    setup (props) {
+        console.log(props.roomList)
+        const form = reactive({
+            title: null,
+            period : null,
+        })
+        const submit = () => {
+            Inertia.post('/room', form, {
+                preserveScroll: true,
+                onSuccess: () => form.reset('title','period'),
+            });
+        }
+        const periodPicker = (period) => {
+            console.log(period, 'datavalue...')
+            form.period = period
+        }
+
+        const openChatRoom = (room) => {
+            Inertia.get('/room/' + room.id)
+        }
+
+        return { form, submit, periodPicker, openChatRoom }
+    },
+
 }
 </script>
 <style>
-    #img {
-        width: 100%;
-        height: 1000px;
-        background-image: url('/storage/main-travel2.jpg');
-        background-size: 100% 70%;
-        background-repeat: no-repeat;
-    }
 </style>
 

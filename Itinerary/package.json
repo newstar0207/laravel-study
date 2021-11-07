@@ -30,6 +30,7 @@
     "dependencies": {
         "eslint": "^8.0.1",
         "laravel-echo": "^1.11.2",
+        "litepie-datepicker": "^1.0.14",
         "pusher-js": "^7.0.3",
         "vuex": "^4.0.2"
     }

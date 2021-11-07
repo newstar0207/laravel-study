@@ -9,7 +9,7 @@
 
                     <a class="text-3xl font-bold font-heading" href="#">
                     <!-- <img class="h-9" src="logo.png" alt="logo"> -->
-                    Itinerary
+
                     </a>
 
 

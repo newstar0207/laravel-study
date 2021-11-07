@@ -32,13 +32,10 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
 
-Route::get('home', function () {
-    return Inertia::render('Container');
-});
-
 Route::prefix('room')->group(function () {
     Route::get('/', [RoomController::class, 'index'])->name('room.index');
     Route::post('/', [Roomcontroller::class, 'store'])->name('room.store');
     Route::get('/{roomId}', [RoomController::class, 'show'])->name('room.show');
-    Route::patch('/{roomId}', [RoomController::class], 'update')->name('room.update');
+    Route::patch('/{roomId}', [RoomController::class, 'update'])->name('room.update');
+    Route::delete('/{id}', [RoomController::class, 'destroy'])->name('room.destroy');
 });

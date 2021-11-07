@@ -5,6 +5,7 @@ import { createInertiaApp } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 import { createStore } from 'vuex';
 import { index } from './store/index.js';
+import LitepieDatepicker from 'litepie-datepicker';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
@@ -22,6 +23,7 @@ createInertiaApp({
             .mixin({ methods: { route } })
             .use(plugin)
             .use(store)
+            .use(LitepieDatepicker)
             .mount(el);
     },
 });
