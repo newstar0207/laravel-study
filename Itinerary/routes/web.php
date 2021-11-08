@@ -4,6 +4,7 @@ use App\Http\Controllers\API\ChatController;
 use App\Http\Controllers\API\ChatRoomController;
 use App\Http\Controllers\API\UserStateController;
 use App\Http\Controllers\roomController;
+use App\Http\Controllers\RoomController as ControllersRoomController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -35,6 +36,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 Route::prefix('room')->group(function () {
     Route::get('/', [RoomController::class, 'index'])->name('room.index');
     Route::post('/', [Roomcontroller::class, 'store'])->name('room.store');
+    Route::get('/find', [RoomController::class, 'find'])->name('room.find');
     Route::get('/{roomId}', [RoomController::class, 'show'])->name('room.show');
     Route::patch('/{roomId}', [RoomController::class, 'update'])->name('room.update');
     Route::delete('/{id}', [RoomController::class, 'destroy'])->name('room.destroy');

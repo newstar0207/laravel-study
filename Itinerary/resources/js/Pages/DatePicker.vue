@@ -26,19 +26,25 @@
             month: 'MMM'
         })
 
+        dateValue.value[0] = props.date.start_period
+        dateValue.value[1] = props.date.end_period
+        context.emit('period', dateValue)
+
         watch(dateValue ,() => {
             console.log('emit')
             context.emit('period', dateValue)
             // emit('period', dateValue)
         })
 
-        onMounted(() => {
-            if(props.date == null) {
-                return
-            }
-            dateValue.value[0] = props.date.start_period
-            dateValue.value[1] = props.date.end_period
-        })
+        // onMounted(() => {
+        //     if(props.date == null) {
+        //         return
+        //     }
+        //     dateValue.value[0] = props.date.start_period
+        //     dateValue.value[1] = props.date.end_period
+        //     context.emit('period', dateValue)
+        //     console.log(dateValue,'datepicker.vue... ')
+        // })
 
         return {
             dateValue,

@@ -36,6 +36,7 @@ class RoomController extends Controller
             return Inertia::render('Container', ['error' => $validator->errors()]);
         }
 
+
         $room_color = $this->rand_color();
 
         // dd($request->period);
@@ -61,23 +62,29 @@ class RoomController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'owner' => 'required',
-            'date' => 'required|date',
+            'date' => 'required',
         ]);
 
         if ($validator->fails()) {
             return Inertia::render('Container', ['error' => $validator->errors()]);
         }
 
+        // $isUser = DB::table('users')->where('name', $request->owner);
+        // if (!$isUser) {
+        //     return Inertia::render('Container', ['error' => 'user nono']);
+        // }
+
         $room = Room::find($id);
         $room->title = $request->title;
         $room->owner = $request->owner;
-        $room->period = $request->period;
+        $room->start_period = $request->period[0];
+        $room->end_period = $request->period[1];
         $room->save();
 
-        $roomList = User::find(Auth::user()->id)->rooms();
+        // $roomList = User::find(Auth::user()->id)->rooms();
         // dd($roomList);
 
-        return Inertia::render('Container', ['roomList' => $roomList]);
+        return Redirect::route('room.show', ['roomId' => $room->id]);
     }
 
     public function show($id)
@@ -94,5 +101,13 @@ class RoomController extends Controller
         $room->delete();
         $roomList = User::find(Auth::user()->id)->rooms()->get();
         return Inertia::render('Container', ['roomList' => $roomList]);
+    }
+
+    public function find(Request $request)
+    {
+        $isExist = DB::table('rooms')->where('password', $request->searchRoomPassword)->first();
+        auth()->user()->rooms()->toggle($isExist->id);
+        $roomList = User::find(Auth::user()->id)->rooms()->get();
+        return Redirect::route('room.index');
     }
 }
