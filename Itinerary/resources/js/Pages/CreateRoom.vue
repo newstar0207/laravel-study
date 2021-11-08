@@ -1,12 +1,13 @@
 <template>
     <div class="border-2 border-gray-500">
+        create room...
         <div class="py-12">
             <div class="bg-white shadow-xl sm:rounded-lg h-300">
                     <form @submit.prevent="submit()">
                     <label>title</label>
                     <input id="title" required class="border-2 border-gray-300" v-model="form.title" />
                     <label>period</label>
-                    <date-picker @period='periodPicker'></date-picker>
+                    <date-picker  @period='periodPicker' v-model="period"></date-picker>
                     <!-- {{ period }} -->
                     <!-- <input id="period" required class="border-2 border-gray-300" v-model="form.period" /> -->
                     <button type="submit" class="bg-blue-500 hover:bg-blue-400">Submit</button>
@@ -34,8 +35,13 @@ export default {
         const submit = () => {
             Inertia.post('/room', form, {
                 preserveScroll: true,
+                onSuccess : () => {
+                    form.title = ''
+
+                }
             });
         }
+
         const periodPicker = (period) => {
             console.log(period, 'datavalue...')
             form.period = period

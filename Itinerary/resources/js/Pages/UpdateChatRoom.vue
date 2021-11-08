@@ -8,7 +8,7 @@
                     <label>title</label>
                     <input id="title" required class="border-2 border-gray-300" v-model="form.title" />
                     <label>period</label>
-                    <date-picker :date='room' @period='periodPicker'></date-picker>
+                    <date-picker :date='room' @period='periodPicker' v-model='form.period'></date-picker>
                     <label>owner</label>
                     <input id="owner" required class="border-2 border-gray-300" v-model='form.owner'>
                     <button type="submit" class="bg-blue-500 hover:bg-blue-400">Submit</button>
@@ -39,28 +39,27 @@ export default {
         const form = reactive({
             title : null,
             period : null,
-            owner : null
+            owner : null,
         })
 
         onMounted(() => {
             form.title = props.room.title
             form.owner = props.room.owner
-            form.period = null
+            form.period = [props.room.start_period, props.room.end_period]
+            console.log('mount in updateChatroom')
         })
 
         const submit = () => {
-            Inertia.patch('/room/' + props.room.id , {
+            Inertia.patch('/room/' + props.room.id , form, {
                 preserveScroll: true,
                 onSuccess: () => {
-                    form.title = '';
-                    form.credit = '';
-                    form.period = '';
                 },
             });
         }
         const periodPicker = (period) => {
             console.log(period, 'datavalue...')
             form.period = period
+            console.log(form.period, 'form.period')
         }
 
         return { deleteChatRoom, submit, periodPicker, form, onMounted}

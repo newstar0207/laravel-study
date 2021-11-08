@@ -1,10 +1,7 @@
 <?php
 
-use App\Http\Controllers\API\ChatController;
-use App\Http\Controllers\API\ChatRoomController;
-use App\Http\Controllers\API\UserStateController;
-use App\Http\Controllers\roomController;
-use App\Http\Controllers\RoomController as ControllersRoomController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\RoomController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,4 +37,11 @@ Route::prefix('room')->group(function () {
     Route::get('/{roomId}', [RoomController::class, 'show'])->name('room.show');
     Route::patch('/{roomId}', [RoomController::class, 'update'])->name('room.update');
     Route::delete('/{id}', [RoomController::class, 'destroy'])->name('room.destroy');
+});
+
+
+Route::group(function () {
+    Route::post('/room/{roomId}/chat', [ChatController::class, 'store'])->name('chat.store');
+    Route::get('/room/{roomId}/chat', [ChatController::class, 'index'])->name('chat.index');
+    Route::delete('/chat/{chatId}', [ChatController::class, 'destroy'])->name('chat.delete');
 });

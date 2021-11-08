@@ -1,7 +1,7 @@
 <template>
     <div class="border-2 border-gray-500">
         show room
-
+        <!-- {{  room }} -->
         <update-chat-room :room = 'room'></update-chat-room>
 
     </div>

@@ -3,7 +3,7 @@
     <litepie-datepicker :formatter='formatter'  v-model="dateValue"></litepie-datepicker>
   </div>
   <div>
-      <!-- {{ dateValue }} -->
+      <!-- {{ date }} -->
   </div>
 </template>
 
@@ -17,7 +17,8 @@
         LitepieDatepicker
     },
     props : [
-        'date'
+        'date',
+
     ],
     setup(props, context) {
         const dateValue = ref([]);
@@ -26,25 +27,26 @@
             month: 'MMM'
         })
 
-        dateValue.value[0] = props.date.start_period
-        dateValue.value[1] = props.date.end_period
-        context.emit('period', dateValue)
+        // dateValue.value[0] = props.date.start_period
+        // dateValue.value[1] = props.date.end_period
+        // context.emit('period', dateValue)
 
         watch(dateValue ,() => {
             console.log('emit')
-            context.emit('period', dateValue)
+            context.emit('period', dateValue.value)
             // emit('period', dateValue)
         })
 
-        // onMounted(() => {
-        //     if(props.date == null) {
-        //         return
-        //     }
-        //     dateValue.value[0] = props.date.start_period
-        //     dateValue.value[1] = props.date.end_period
-        //     context.emit('period', dateValue)
-        //     console.log(dateValue,'datepicker.vue... ')
-        // })
+
+
+        onMounted(() => {
+            if(props.date == null) {
+                return
+            }
+            dateValue.value[0] = props.date.start_period
+            dateValue.value[1] = props.date.end_period
+            context.emit('period', dateValue.value)
+        })
 
         return {
             dateValue,

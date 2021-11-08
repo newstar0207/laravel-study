@@ -62,7 +62,7 @@ class RoomController extends Controller
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'owner' => 'required',
-            'date' => 'required',
+            'period' => 'required',
         ]);
 
         if ($validator->fails()) {
