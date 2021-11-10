@@ -13,10 +13,35 @@
         <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">#winter</span>
       </div>
     </div>
+
+    <jet-confirmation-modal :show="confirmingUserDeletion" @close="confirmingUserDeletion = false">
+        <template #title>
+            Delete Account
+        </template>
+        <template #content>
+            want delete?
+        </template>
+        <template>
+            <jet-secondary-button @click.native='confirmingUserDeletion = false'>
+                Nevermind
+            </jet-secondary-button>
+        </template>
+    </jet-confirmation-modal>
 </template>
 <script>
+import jetConfirmationModal from '../../Jetstream/ConfirmationModal.vue'
+import JetSecondaryButton from '../../Jetstream/SecondaryButton.vue'
+import { ref } from 'vue'
 export default {
+    components : {
+        jetConfirmationModal,
+        JetSecondaryButton,
+    },
+    setup() {
+        const confirmingUserDeletion = ref([false]);
 
+        return { confirmingUserDeletion }
+    }
 }
 </script>
 <style>
