@@ -31,7 +31,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('view-registerred-users', function (User $user) {
-            return $user->email === 'admin@yju.ac.kr';
+            return $user->email === 'admin@g.yju.ac.kr';
         });
     }
 }

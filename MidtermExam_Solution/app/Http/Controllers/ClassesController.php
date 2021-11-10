@@ -100,7 +100,7 @@ class ClassesController extends Controller
     public function index_cr()
     {
         auth()->user()->load('subjects.users');
-
+        // fn() -> 부분로딩, 파샬 로딩? -> lazydate validation https://inertiajs.com/partial-reloads#lazy-data-evaluation 확인해볼것!
         return Inertia::render('ClassesRegistered', ['subjects' => fn () => auth()->user()->subjects]);
     }
 

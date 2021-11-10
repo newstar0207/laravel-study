@@ -38,6 +38,7 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'isAdmin' => fn () => $request->user() ? $request->user()->email === 'admin@g.yju.ac.kr' : false,
+
         ]);
     }
 }

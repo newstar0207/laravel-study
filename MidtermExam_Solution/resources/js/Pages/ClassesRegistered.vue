@@ -32,7 +32,7 @@
                     </td>
                     <td>
                         <!-- <p>{{ subject.users.length }}</p> -->
-                        <Link :href="'/classes/users/' + subject.id" method="get" type="button">
+                        <Link   :href="'/classes/users/' + subject.id" method="get" type="button">
                             {{ subject.users.length }}
                         </Link>
                     </td>
