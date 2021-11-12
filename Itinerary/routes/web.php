@@ -34,14 +34,13 @@ Route::prefix('room')->group(function () {
     Route::get('/', [RoomController::class, 'index'])->name('room.index');
     Route::post('/', [Roomcontroller::class, 'store'])->name('room.store');
     Route::get('/find', [RoomController::class, 'find'])->name('room.find');
-    Route::get('/{roomId}', [RoomController::class, 'show'])->name('room.show');
+    Route::get('/{roomId}/chat', [RoomController::class, 'show'])->name('room.show');
     Route::patch('/{roomId}', [RoomController::class, 'update'])->name('room.update');
     Route::delete('/{id}', [RoomController::class, 'destroy'])->name('room.destroy');
 });
 
 
-Route::group(function () {
-    Route::post('/room/{roomId}/chat', [ChatController::class, 'store'])->name('chat.store');
-    Route::get('/room/{roomId}/chat', [ChatController::class, 'index'])->name('chat.index');
-    Route::delete('/chat/{chatId}', [ChatController::class, 'destroy'])->name('chat.delete');
-});
+
+Route::post('/room/{roomId}/chat', [ChatController::class, 'store'])->name('chat.store');
+// Route::get('/room/{roomId}/chat', [ChatController::class, 'index'])->name('chat.index');
+Route::delete('/chat/{chatId}', [ChatController::class, 'destroy'])->name('chat.delete');

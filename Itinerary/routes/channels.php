@@ -16,9 +16,12 @@ use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel('chat-room.{roomId}', function ($user, $roomId) {
     // if ($user->canJoinRooms($roomId)) {
-    //     return ['id' => $user->id, 'name' => $user->name];
+    // return ['id' => $user->id, 'name' => $user->name, 'roomId' => $roomId];
     // }
-    return ['id' => $user->id, 'roomId' => $roomId];
+    // return ['id' => $user->id, 'roomId' => $roomId];
+    if (Auth::check()) {
+        return ['id' => $user->id, 'name' => $user->name, 'roomId' => $roomId];
+    }
 });
 
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {

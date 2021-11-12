@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chat;
 use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -87,12 +88,14 @@ class RoomController extends Controller
         return Redirect::route('room.show', ['roomId' => $room->id]);
     }
 
-    public function show($id)
+    public function show($roomId)
     {
         // $chat = Room::find($id)->chats();
         // 수정 필요!!
-        $room = Room::find($id);
-        return Inertia::render('ChatRoom', ['room' => $room]);
+        $room = Room::find($roomId);
+        $chatList = Chat::where('room_id', $roomId)->get();
+        return Inertia::render('ChatRoom', ['chatList' => $chatList, 'room' => $room]);
+        // return Inertia::render('ChatRoom', ['room' => $room]);
     }
 
     public function destroy($id)

@@ -24,14 +24,13 @@ class NewChat implements ShouldBroadcast
 
     public $chat;
     public $roomId;
-    public $user;
 
 
-    public function __construct(Chat $chat, $roomId, $user)
+
+    public function __construct(Chat $chat, $roomId)
     {
         $this->chat = $chat;
         $this->roomId = $roomId;
-        $this->user = $user;
     }
 
     /**
@@ -43,9 +42,4 @@ class NewChat implements ShouldBroadcast
     {
         return new PresenceChannel('chat-room.' . $this->roomId);
     }
-
-    // public function broadcastAs()
-    // {
-    //     return 'new-chat.created';
-    // }
 }

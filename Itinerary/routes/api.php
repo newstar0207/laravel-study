@@ -15,6 +15,3 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::post('signin', [AuthController::class, 'signin']);
-Route::post('signup', [AuthController::class, 'signup']);

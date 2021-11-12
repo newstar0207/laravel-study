@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Models\User;
+use App\Models\Chat;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,21 +11,23 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class UserOnline implements ShouldBroadcast
+class DeleteChat implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    public $user;
-    public $roomId;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(User $user, $roomId)
+
+    public $chat;
+    public $roomId;
+
+
+    public function __construct(Chat $chat, $roomId)
     {
-        $this->user = $user;
+        $this->chat = $chat;
         $this->roomId = $roomId;
     }
 

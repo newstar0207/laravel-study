@@ -3,6 +3,7 @@
         roomList!!
         <div>
             <div v-for="room in roomList" :key="room.id" @click="openChatRoom(room)">
+                <!-- <Link :href="'/room/' + room.id + '/chat'">{{ room.title }}</Link> -->
                 {{  room.title }}
             </div>
         </div>
@@ -10,13 +11,17 @@
 </template>
 <script>
 import { Inertia } from '@inertiajs/inertia'
+import { Link } from '@inertiajs/inertia-vue3'
 export default {
     props : [
-        'roomList'
+        'roomList',
     ],
+    components : {
+        Link,
+    },
     setup(){
         const openChatRoom = (room) => {
-            Inertia.get('/room/' + room.id)
+            Inertia.get('/room/' + room.id + '/chat')
         }
 
         return { openChatRoom }
