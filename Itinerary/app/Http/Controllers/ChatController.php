@@ -28,10 +28,7 @@ class ChatController extends Controller
 
     public function store(Request $request, $roomId)
     {
-        // $validator = Validator::make($request->all(), [
-        //     'chat' => 'required',
-        // ]);
-
+        // dd($request->hasFile('image'));
 
         $validator = Validator::make($request->all(), [
             'chat' => 'required_if:$request->image,==,false',
@@ -41,12 +38,11 @@ class ChatController extends Controller
         if ($validator->fails()) {
             return Inertia::render('ChatRoom', ['error' => $validator->errors()]);
         }
-
         $chat = new Chat;
         $chat->chat = $request?->chat;
         $chat->user_id = Auth::user()->id;
         $chat->room_id = $roomId;
-        if ($request?->image) {
+        if ($request->hasFile('image')) {
             $newImageName = time() . $request->file('image')->getClientOriginalName();
             $request->image->move(public_path('/storage/images'), $newImageName);
             $url = asset('storage/images/' . $newImageName);

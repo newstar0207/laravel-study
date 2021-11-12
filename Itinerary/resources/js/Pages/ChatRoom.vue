@@ -12,7 +12,7 @@
             <form @submit.prevent="submit">
                 <label>name</label>
                 <input type="text" v-model="form.chat"/>
-                <input type="file" @input="form.image = $event.target.files[0]"/>
+                <input type="file" ref="inputFile" @input="form.image = $event.target.files[0]"/>
                 <br>
                 <button type="submit" class="bg-blue-500 hover:bg-blue-400">Submit</button>
             </form>
@@ -31,7 +31,6 @@
 <script>
 import { reactive, ref } from '@vue/reactivity'
 import UpdateChatRoom from './UpdateChatRoom.vue'
-import { Inertia } from '@inertiajs/inertia'
 
 export default {
     props : [
@@ -50,14 +49,23 @@ export default {
         const chats = ref(props.chatList);
 
 
-
         function submit() {
-            axios.post(`/room/${props.room.id}/chat`, {
-                chat : form.chat,
-                image : form.image,
+            const formData = new FormData()
+            if (form.image != null) {
+                console.log(form.image)
+                formData.append('image',form.image)
+                // for (var pair of formData.entries()) {
+                //     console.log(pair[0]+ ', ' + pair[1]);
+                // }
+                // return
+            }
+            formData.append('chat', form.chat)
+            axios.post(`/room/${props.room.id}/chat`, formData,{
+                headers: { 'Content-Type': 'multipart/form-data' }
             }).then((response) => {
                 chats.value.push(response.data);
                 form.chat = ''
+                form.image = null
             }).catch((error) => {
                 console.error(error);
             })
@@ -93,7 +101,7 @@ export default {
                 console.log(users, 'here!!!');
             })
             .joining((user) => {
-                console.log(user, 'joining!!!');
+                console.log(user, 'joining!!!'); // 토스트 띄울것
             })
             .leaving((user) => {
                 console.log(user.name, 'leaving!!!');
@@ -111,7 +119,7 @@ export default {
 
 
 
-        return { submit, form, deleteChat, broadcastingRoom, chats, deleteChatInchats }
+        return { submit, form, deleteChat, broadcastingRoom, chats, deleteChatInchats}
     }
 
 }
