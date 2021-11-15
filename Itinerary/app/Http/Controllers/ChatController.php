@@ -17,13 +17,11 @@ use Inertia\Inertia;
 
 class ChatController extends Controller
 {
-    public function index($roomId)
+    public function index($roomId, $skip)
     {
-        // $chatList = Room::find($roomId)->chats();
-        // $chatList = Room::find($roomId)->chats;
-        $chatList = Chat::where('room_id', $roomId)->latest()->get();
-        // dd($chatList);
-        return Inertia::render('ChatRoom', ['chatList' => $chatList]);
+        $chatList = Chat::where('room_id', $roomId)->orderBy('created_at', 'desc')->skip($skip)->take(13)->get();
+        return response()->json($chatList);
+        // return Inertia::render('ChatRoom', ['chatList' => $chatList]);
     }
 
     public function store(Request $request, $roomId)

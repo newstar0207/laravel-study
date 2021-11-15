@@ -41,6 +41,7 @@ Route::prefix('room')->group(function () {
 
 
 
+Route::get('/{roomId}/chat/{skip}', [ChatController::class, 'index'])->name('chat.index');
 Route::post('/room/{roomId}/chat', [ChatController::class, 'store'])->name('chat.store');
 // Route::get('/room/{roomId}/chat', [ChatController::class, 'index'])->name('chat.index');
 Route::delete('/chat/{chatId}', [ChatController::class, 'destroy'])->name('chat.delete');

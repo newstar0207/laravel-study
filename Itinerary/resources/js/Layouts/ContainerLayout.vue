@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- <Head :title="title" /> -->
-        <div class="min-h-screen bg-gray-100">
+        <div class="bg-gray-100 h-screen">
             <nav class="bg-white border-b border-gray-100 drop-shadow-lg">
                 <!-- Primary Navigation Menu -->
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -104,9 +104,9 @@
             </nav>
 
             <!-- Page Content 본문 내용 들어가는 부분 -->
-            <main>
-                <slot></slot>
-            </main>
+            <!-- <div> -->
+            <slot></slot>
+            <!-- </div> -->
         </div>
     </div>
 </template>

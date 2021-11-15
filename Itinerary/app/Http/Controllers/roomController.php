@@ -93,8 +93,8 @@ class RoomController extends Controller
         // $chat = Room::find($id)->chats();
         // 수정 필요!!
         $room = Room::find($roomId);
-        $chatList = Chat::where('room_id', $roomId)->get();
-        return Inertia::render('ChatRoom', ['chatList' => $chatList, 'room' => $room]);
+        // $chatList = Chat::where('room_id', $roomId)->paginate(5)->get();
+        return Inertia::render('ChatRoom', ['room' => $room]);
         // return Inertia::render('ChatRoom', ['room' => $room]);
     }
 

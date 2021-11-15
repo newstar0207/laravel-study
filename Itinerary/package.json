@@ -32,6 +32,7 @@
         "laravel-echo": "^1.11.2",
         "litepie-datepicker": "^1.0.14",
         "pusher-js": "^7.0.3",
+        "vue-intersect": "^3.0.0",
         "vuex": "^4.0.2"
     }
 }
