@@ -19,7 +19,7 @@ class CreateSchedulesTable extends Migration
             $table->integer('room_id');
             $table->string('schedule');
             $table->date('date');
-            $table->boolean('iscomplete');
+            $table->boolean('iscomplete')->default(false);
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
         });
     }
@@ -29,7 +29,7 @@ class CreateSchedulesTable extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down()  
     {
         Schema::dropIfExists('schedules');
     }

@@ -19,7 +19,7 @@ class ChatController extends Controller
 {
     public function index($roomId, $skip)
     {
-        $chatList = Chat::where('room_id', $roomId)->orderBy('created_at', 'desc')->skip($skip)->take(13)->get();
+        $chatList = Chat::where('room_id', $roomId)->orderBy('created_at', 'desc')->skip($skip)->take(10)->get();
         return response()->json($chatList);
         // return Inertia::render('ChatRoom', ['chatList' => $chatList]);
     }
@@ -56,13 +56,11 @@ class ChatController extends Controller
     public function destroy($chatId)
     {
         $chat = Chat::find($chatId);
-        $roomId = $chat->room_id;
         if ($chat->image) {
             $deleteImage = substr($chat->image, 37);
             Storage::delete('public/images/' . $deleteImage);
         }
         broadcast(new DeleteChat($chat, $chat->room_id))->toOthers();
-
         $chat->delete();
 
         return response()->json(201);

@@ -6,6 +6,7 @@ import { InertiaProgress } from '@inertiajs/progress';
 import { createStore } from 'vuex';
 import { index } from './store/index.js';
 import LitepieDatepicker from 'litepie-datepicker';
+import Notifications from 'notiwind';
 
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
@@ -24,6 +25,7 @@ createInertiaApp({
             .use(plugin)
             .use(store)
             .use(LitepieDatepicker)
+            .use(Notifications)
             .mount(el);
     },
 });

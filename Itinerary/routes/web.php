@@ -35,13 +35,15 @@ Route::prefix('room')->group(function () {
     Route::post('/', [Roomcontroller::class, 'store'])->name('room.store');
     Route::get('/find', [RoomController::class, 'find'])->name('room.find');
     Route::get('/{roomId}/chat', [RoomController::class, 'show'])->name('room.show');
+    Route::post('/{roomId}/schedule', [RoomController::class, 'addSchedule'])->name('room.addSchdule');
+    Route::post('/{roomId}/schedule/{scheduleId]', [RoomController::class, 'completeSchedule'])->name('room.completeSchdule');
+    Route::get('/{roomId}/schedule', [RoomController::class, 'getSchedule'])->name('room.getSchdule');
     Route::patch('/{roomId}', [RoomController::class, 'update'])->name('room.update');
     Route::delete('/{id}', [RoomController::class, 'destroy'])->name('room.destroy');
+    // Route::get('/{roomId}/room', [RoomController::class, 'roomInfo'])->name('room.roomInfo');
+    Route::delete('/{roomId}/user/{userId}', [RoomController::class, 'userBan'])->name('room.userBan');
 });
-
-
 
 Route::get('/{roomId}/chat/{skip}', [ChatController::class, 'index'])->name('chat.index');
 Route::post('/room/{roomId}/chat', [ChatController::class, 'store'])->name('chat.store');
-// Route::get('/room/{roomId}/chat', [ChatController::class, 'index'])->name('chat.index');
 Route::delete('/chat/{chatId}', [ChatController::class, 'destroy'])->name('chat.delete');

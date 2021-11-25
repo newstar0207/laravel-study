@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Chat;
 use App\Models\Room;
+use App\Models\Schedule;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -70,11 +71,6 @@ class RoomController extends Controller
             return Inertia::render('Container', ['error' => $validator->errors()]);
         }
 
-        // $isUser = DB::table('users')->where('name', $request->owner);
-        // if (!$isUser) {
-        //     return Inertia::render('Container', ['error' => 'user nono']);
-        // }
-
         $room = Room::find($id);
         $room->title = $request->title;
         $room->owner = $request->owner;
@@ -82,10 +78,7 @@ class RoomController extends Controller
         $room->end_period = $request->period[1];
         $room->save();
 
-        // $roomList = User::find(Auth::user()->id)->rooms();
-        // dd($roomList);
-
-        return Redirect::route('room.show', ['roomId' => $room->id]);
+        return response()->json($room);
     }
 
     public function show($roomId)
@@ -101,8 +94,13 @@ class RoomController extends Controller
     public function destroy($id)
     {
         $room = Room::find($id);
-        $room->delete();
         $roomList = User::find(Auth::user()->id)->rooms()->get();
+
+        if ($room->owner != Auth::user()->id) {
+            return Inertia::render('Container', ['roomList' => $roomList, 'error' => 'your not owner...']);
+        }
+
+        $room->delete();
         return Inertia::render('Container', ['roomList' => $roomList]);
     }
 
@@ -112,5 +110,59 @@ class RoomController extends Controller
         auth()->user()->rooms()->toggle($isExist->id);
         $roomList = User::find(Auth::user()->id)->rooms()->get();
         return Redirect::route('room.index');
+    }
+
+    public function addSchedule(Request $request, $roomId)
+    {
+        $validator = Validator::make($request->all(), [
+            'schedule' => 'required',
+            'date' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+
+        $schedule = new Schedule();
+        $schedule->schedule = $request->schedule;
+        $schedule->date = $request->date;
+        $schedule->room_id = $roomId;
+        $schedule->save();
+    }
+
+
+    public function getSchedule($roomId)
+    {
+        $schedules = Room::find($roomId)->schedules();
+        return response()->json($schedules);
+    }
+
+    public function completeSchedule(Request $request, $scheduleId)
+    {
+        $validator = Validator::make($request->all(), [
+            'iscomplete' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+
+        $schedule = Schedule::find($scheduleId);
+        $schedule->iscomplete = true;
+        $schedule->save();
+    }
+
+    public function userBan(Room $room, User $user)
+    {
+        $user->rooms()->toggle($room->id);
+        $userList = $room->users();
+
+        $room->password = $this->rand_color();
+        $room->save();
+
+        if (Auth::user()->id == $user->id) {
+            return route('room.index');
+        }
+        return response()->json($userList);
     }
 }

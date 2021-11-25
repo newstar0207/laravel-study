@@ -5,10 +5,9 @@
         <div class="flex flex-row grid grid-cols-20 min-h-[calc(100vh-72px)]">
 
             <!-- 리스트 -->
-            <div class="border-2 border-gray-500 col-span-10 bg-white rounded shadow-lg p-4 my-4 ml-4 mr-4">
-                room.password : {{ room.password }}
-                <update-chat-room :room = 'room'></update-chat-room>
-            </div>
+            <chat-room-list :room='room' :roomUsers = 'roomUsers'></chat-room-list>
+
+
 
             <!-- 메시지 -->
             <div class="flex-1 justify-between flex flex-col col-span-10 rounded p-2 mt-2 mr-4">
@@ -28,36 +27,54 @@
 
                 <!-- 메시지 리스트 -->
                 <div class="flex flex-col flex-grow space-y-4 p-3 overflow-y-scroll h-96">
-                    <intersect @enter='inters(true)' @leave='inters(false)'>
-                        <div>fsdf</div>
-                    </intersect>
+                    <InfiniteLoading :chats="chats" @infinite="load" top/>
                     <div v-for="chat in chats" :key="chat.id">
-                        <div class="flex items-end">
+
+                        <!-- 내가 쓴 -->
+                        <div class="flex items-end justify-end" v-if="$page.props.user.id == chat.user_id">
+                            <svg @click="openModal(chat.id)" xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-red-300	"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
                             <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
-                                <div class="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600" @dblclick="clickChat(chat)">{{chat.chat}}
+                                <div class="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-gray-300 text-gray-600">
+                                    {{chat.chat}}
                                     <img v-if="chat.image" :src="chat.image" alt="" width="200" height="200">
                                 </div>
                             </div>
-                            <img src="https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144" alt="My profile" class="w-6 h-6 rounded-full order-1">
+                            <img :src='$page.props.user.profile_photo_url' :alt="$page.props.user.name" class="w-6 h-6 rounded-full order-1">
                         </div>
 
-                        <div v-if="actionModal" @close='actionModal = false'>
-                            <div class="modal-mask">
-                                <div class="modal-wrapper">
-                                    <div class="modal-container">
-                                        <h1 class="text-center text-2xl text-red-500">Delete</h1>
-                                        <div class = "flex flex-row w-auto" >
-                                            <button class="mt-12 w-1/2 text-center bg-gray-400 py-2 mx-3 rounded-lg" @click="deleteChat(chat.id)">delete</button>
-                                            <button class="mt-12 w-1/2 text-center bg-gray-400 py-2 mx-3 rounded-lg" @click="this.actionModal = false">cancel</button>
-                                        </div>
-                                    </div>
+                        <!-- 남이 쓴 -->
+                        <div class="flex items-end" v-else>
+                            <svg @click="openModal(chat.id)"   xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-red-300	"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
+                                <div class="px-4 py-2 rounded-lg inline-block rounded-bl-none bg-blue-200 text-gray-600">
+                                    {{chat.chat}}
+                                    <img v-if="chat.image" :src="chat.image" alt="" width="200" height="200">
                                 </div>
                             </div>
+                            <img :src='p' :alt="$page.props.user.name" class="w-6 h-6 rounded-full order-1">
                         </div>
-
-
                     </div>
                 </div>
+
+                <!-- 모달 -->
+                <jet-confirmation-modal :show="actionModal" @close="actionModal = false" >
+                    <template #title>
+                        <div>
+                            <h1 class="text-center text-2xl text-red-500">Delete</h1>
+                        </div>
+                    </template>
+                    <template #footer>
+                        <div class="flex flex">
+                            <button class="mt-12 w-1/2 text-center bg-blue-300 py-2 mx-3 rounded-lg" @click="deleteChat()">delete</button>
+                            <button class="mt-12 w-1/2 text-center bg-blue-300 py-2 mx-3 rounded-lg" @click="this.actionModal = false">cancel</button>
+                        </div>
+                    </template>
+                </jet-confirmation-modal>
+
 
                 <!-- 메시지 입력 -->
                 <div class="border-t-2 border-gray-200 px-4 pt-4 mb-2 sm:mb-0 flex-none">
@@ -78,36 +95,38 @@
                                     <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                                 </svg>
                             </button>
-
-                            <!-- <input type="text" v-model="form.chat" class="w-full text-gray-600 placeholder-gray-600 bg-gray-200 rounded-full" placeholder="message..."/>
-                            <button type="submit" class="bg-blue-500 hover:bg-blue-400" @click="submit" ref='submitChat'>Submit</button> -->
                         </div>
                     </div>
                 </div>
             </div>
-
-
-
         </div>
     </container-layout>
 </template>
 <script>
-import { onMounted, onUnmounted } from 'vue'
 import { reactive, ref  } from '@vue/reactivity'
 import UpdateChatRoom from './UpdateChatRoom.vue'
 import ContainerLayout from '../Layouts/ContainerLayout.vue'
-import Intersect from 'vue-intersect'
+
 import JetConfirmationModal from '../Jetstream/ConfirmationModal.vue'
+import ChatRoomList from './ChatRoomList.vue'
+import InfiniteLoading from "v3-infinite-loading";
+import "v3-infinite-loading/lib/style.css";
+import { notify } from "notiwind"
+
+
+
 
 export default {
     props : [
         'room',
+
     ],
     components : {
         UpdateChatRoom,
         ContainerLayout,
-        Intersect,
         JetConfirmationModal,
+        ChatRoomList,
+        InfiniteLoading,
 
     },
     setup(props){
@@ -115,37 +134,66 @@ export default {
             chat: null,
             image: null,
         })
-
-        const chats = ref([]);
+        const chats = ref([])
         const actionModal = ref(false)
+        const deleteChatId = ref(null)
+        const roomUsers = ref([])
+
+        function openModal(id){
+            deleteChatId.value = id
+            actionModal.value = true
+        }
+
+
+        // infinite scroll
+        let skip = 1
+
+        const load = async $state => {
+            console.log("loading...");
+            try {
+                axios.get(`/${props.room.id}/chat/${skip}`)
+                .then(response => {
+                    const json = response.data.reverse()
+                    if (json.length < 1)
+                        $state.complete();
+                    else {
+                        chats.value.push(...json);
+                        console.log(response.data)
+                        $state.loaded();
+                    }
+                }).catch(error => {
+                    console.error(error)
+                })
+                skip += 10;
+            } catch (error) {
+                $state.error();
+            }
+        };
+
+
+
 
         function submit() {
             const formData = new FormData()
             if (form.image != null) {
                 console.log(form.image)
                 formData.append('image',form.image)
-                // for (var pair of formData.entries()) {
-                    //     console.log(pair[0]+ ', ' + pair[1]);
-                // }
-                // return
             }
             formData.append('chat', form.chat)
             axios.post(`/room/${props.room.id}/chat`, formData,{
                 headers: { 'Content-Type': 'multipart/form-data' }
             }).then((response) => {
+                console.log(response.data)
                 chats.value.push(response.data);
                 form.chat = ''
                 form.image = null
-
-                // scrollToEnd()
             }).catch((error) => {
                 console.error(error);
             })
         }
 
         const deleteChatInchats = (chatId) => {
-            let i;
-            for(i = 0 ;  i < chats.value.length ; i++){
+            for(let i = 0 ;i < chats.value.length ; i++){
                 if (chats.value[i].id == chatId) {
                     if (i > -1) chats.value.splice(i, 1)
                     break
@@ -154,30 +202,44 @@ export default {
             actionModal.value = false
         }
 
-        const deleteChat = (chatId) => {
-            // Inertia.delete(`/chat/${chat.id}`)
-            // let localChat = chat
-            axios.delete(`/chat/${chatId}`, {
-                // chat : localChat.chat,
-                // image : localChat.image,
+
+
+        // 해당 댓글 찾아서 삭제시키기
+        const deleteChat = () => {
+            const id = parseInt(deleteChatId.value)
+            axios.delete(`/chat/${id}`, {
             }).then((response) => {
                 console.log(response)
-                deleteChatInchats(chatId)
+                deleteChatInchats(id)
             }).catch((error) => {
                 console.error(error)
             })
-            // 해당 댓글 찾아서 삭제시키기
         }
 
+
+
         var broadcastingRoom = Echo.join(`chat-room.${props.room.id}`)
-            .here((users) => {
-                console.log(users, 'here!!!');
+            .here((user) => {
+                console.log(user, 'here!!!');
+                roomUsers.value = user
             })
             .joining((user) => {
-                console.log(user, 'joining!!!'); // 토스트 띄울것
+                console.log(user, 'joining!!!');
+                notify({
+                    group: "joinUser",
+                    title: user.name,
+                    // text: user.roomId
+                }, 2000) // 2s
+                roomUsers.value.push(...user)
             })
             .leaving((user) => {
                 console.log(user.name, 'leaving!!!');
+                notify({
+                    group: "leavingUser",
+                    title: user.name,
+                    // text: user.roomId
+                }, 2000) // 2s
+                checkUser()
             })
             .listen('NewChat', (e) => {
                 // console.log(e, 'listen!!!');
@@ -185,40 +247,21 @@ export default {
                 form.chat = ''
             })
             .listen('DeleteChat', (e) => {
-                deleteChatInchats(e.chat);
+                deleteChatInchats(e.chat.id);
             });
 
-        let skip = 0
-        function loadMoreChat() {
-            axios.get(`/${props.room.id}/chat/${skip}`)
-            .then((response) => {
-                let reversedChats = response.data.reverse()
-                console.log(reversedChats, 'moreChat!!!...')
-                // chats.value
-                chats.value = reversedChats.concat(chats.value)
-                console.log(chats.value)
-            })
-            skip += 10;
-            console.log('load...')
-        }
-
-            // function scrollToEnd() {
-
-            // }
-
-
-        function inters(enter) {
-            if(enter) {
-                console.log('entered!!!')
-                loadMoreChat() // 앞으로 넣기
-            }else {
-                console.log('leaved...')
-            }
-        }
-
-        function clickChat(chat){
-            console.log(chat.id)
+        function clickChat(id){
+            console.log(id)
             actionModal.value = true
+        }
+
+        function checkUser(user) {
+            for(let i =0; i < roomUsers.value.length; i++) {
+                if (roomUsers.value[i].id == user.id) {
+                    roomUsers.value.splice(i,1)
+                    break
+                }
+            }
         }
 
         return {
@@ -228,45 +271,17 @@ export default {
             broadcastingRoom,
             chats,
             deleteChatInchats,
-            loadMoreChat,
-            onMounted,
-            onUnmounted ,
-            inters,
             clickChat,
             actionModal,
+            load,
+            openModal,
+            checkUser,
+            roomUsers,
         }
     }
 
 }
 </script>
 <style>
-    .max_pic {
-        max-height: 550px;
-    }
 
-    .modal-mask {
-        position: fixed;
-        z-index: 9998;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0, 0.1);
-        display: table;
-        transition: opacity .3s ease;
-    }
-    .modal-wrapper {
-        display: table-cell;
-        vertical-align: middle;
-    }
-    .modal-container {
-        width: 350px;
-        margin: 0px auto;
-        padding: 20px 30px;
-        background-color: #fff;
-        border-radius: 2px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        transition: all .3s ease;
-        font-family: Helvetica, Arial, sans-serif;
-    }
 </style>

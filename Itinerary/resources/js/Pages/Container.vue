@@ -33,7 +33,6 @@
     </container-layout>
 </template>
 <script>
-import Navi from './Room/Navi.vue'
 import ContainerLayout from '../Layouts/ContainerLayout.vue'
 import CreateRoom from './CreateRoom.vue'
 import { reactive } from '@vue/reactivity'
@@ -42,7 +41,6 @@ import RoomList from './RoomList.vue'
 export default {
     components : {
         ContainerLayout,
-        Navi,
         CreateRoom,
         RoomList,
     },
