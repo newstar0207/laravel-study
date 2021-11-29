@@ -26,12 +26,14 @@
                 </div>
 
                 <!-- 메시지 리스트 -->
-                <div class="flex flex-col flex-grow space-y-4 p-3 overflow-y-scroll h-96">
-                    <InfiniteLoading :chats="chats" @infinite="load" top/>
+                <div class="flex flex-col flex-grow space-y-4 p-3 overflow-y-scroll h-96" id="messageBody" >
+                <!-- <InfiniteLoading :chats="chats" @infinite="load" top/> -->
+                    <intersect v-if="callInter" @enter='inters(true)' @leave='inters(false)'>
+                        <div class="">.</div>
+                    </intersect>
                     <div v-for="chat in chats" :key="chat.id">
-
                         <!-- 내가 쓴 -->
-                        <div class="flex items-end justify-end" v-if="$page.props.user.id == chat.user_id">
+                        <div class="flex items-end justify-end" v-if="$page.props.user.id == chat.user_id" >
                             <svg @click="openModal(chat.id)" xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-red-300	"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -109,11 +111,12 @@ import ContainerLayout from '../Layouts/ContainerLayout.vue'
 
 import JetConfirmationModal from '../Jetstream/ConfirmationModal.vue'
 import ChatRoomList from './ChatRoomList.vue'
-import InfiniteLoading from "v3-infinite-loading";
-import "v3-infinite-loading/lib/style.css";
+// import InfiniteLoading from "v3-infinite-loading";
+// import "v3-infinite-loading/lib/style.css";
 import { notify } from "notiwind"
-
-
+// import { onMounted } from '@vue/runtime-core'
+// import Intersect from 'vue-intersect'
+import Intersect from 'vue-intersect'
 
 
 export default {
@@ -126,7 +129,8 @@ export default {
         ContainerLayout,
         JetConfirmationModal,
         ChatRoomList,
-        InfiniteLoading,
+        // InfiniteLoading,
+        Intersect,
 
     },
     setup(props){
@@ -138,6 +142,13 @@ export default {
         const actionModal = ref(false)
         const deleteChatId = ref(null)
         const roomUsers = ref([])
+        const callInter = ref(true)
+
+
+        // onMounted(() =>  {
+        //     scrollBottom()
+        // })
+
 
         function openModal(id){
             deleteChatId.value = id
@@ -146,31 +157,52 @@ export default {
 
 
         // infinite scroll
-        let skip = 1
-
-        const load = async $state => {
-            console.log("loading...");
-            try {
+        let skip = 0
+        function inters(enter) {
+            setTimeout(() => {
+                console.log('지연...')
+            }, 1000);
+            if(enter) {
+                console.log(skip, 'skip...')
                 axios.get(`/${props.room.id}/chat/${skip}`)
                 .then(response => {
-                    const json = response.data.reverse()
-                    if (json.length < 1)
-                        $state.complete();
-                    else {
-                        chats.value.push(...json);
+                    if (response.data.message){
+                        console.log(response.data.message, 'message...');
+                        callInter.value = false
+                        return
+                    }else {
+
+                        var messageBody = document.querySelector('#messageBody');
+                        let preventScroll = messageBody.scrollHeight
+                        // let preventScroll = messageBody.scrollHeight - messageBody.scrollTop
+
+
                         console.log(response.data)
-                        $state.loaded();
+                        // const scrollSum = 0
+                        const json = response.data
+                        // chats.value.push(...js);
+                        for(let i = 0; i < json.length; i++) {
+                            console.log(json[i])
+                            chats.value.unshift(json[i])
+                        }
+
+                        setTimeout(() => {
+                            messageBody.scrollTo({ top : messageBody.scrollHeight - preventScroll})
+                        }, 0);
                     }
                 }).catch(error => {
                     console.error(error)
                 })
-                skip += 10;
-            } catch (error) {
-                $state.error();
+                skip += 13;
+                if (skip == 13 ) {
+                    setTimeout(() => {
+                        scrollBottom()
+                    }, 500);
+                }
+            }else {
+                console.log('leaved...')
             }
-        };
-
-
+        }
 
 
         function submit() {
@@ -183,13 +215,21 @@ export default {
             axios.post(`/room/${props.room.id}/chat`, formData,{
                 headers: { 'Content-Type': 'multipart/form-data' }
             }).then((response) => {
-                console.log(response.data)
-                chats.value.push(response.data);
+                // chats.value.push(response.data);
+                // scrollBottom()
                 form.chat = ''
                 form.image = null
             }).catch((error) => {
                 console.error(error);
             })
+            // messageBody.scrollTop = messageBody.scrollHeight - messageBody.scrollTop;
+        }
+
+        function scrollBottom() {
+            setTimeout(() => {
+                var messageBody = document.querySelector('#messageBody');
+                messageBody.scrollTop = messageBody.scrollHeight;
+            }, 0);
         }
 
         const deleteChatInchats = (chatId) => {
@@ -242,9 +282,9 @@ export default {
                 checkUser()
             })
             .listen('NewChat', (e) => {
-                // console.log(e, 'listen!!!');
                 chats.value.push(e.chat)
                 form.chat = ''
+                scrollBottom()
             })
             .listen('DeleteChat', (e) => {
                 deleteChatInchats(e.chat.id);
@@ -273,15 +313,21 @@ export default {
             deleteChatInchats,
             clickChat,
             actionModal,
-            load,
+            // load,
             openModal,
             checkUser,
             roomUsers,
+            scrollBottom,
+            inters,
+            callInter,
+
         }
     }
 
 }
 </script>
 <style>
-
+    #messageBody::-webkit-scrollbar {
+        display: none;
+    }
 </style>

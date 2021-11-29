@@ -37,7 +37,7 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request)
     {
         return array_merge(parent::share($request), [
-            //
+            // 'isOwner' => fn () => $request->room() ? $request->room()->owner === $request->user()->id : false,
         ]);
     }
 }

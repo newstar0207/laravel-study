@@ -8,6 +8,7 @@ import { index } from './store/index.js';
 import LitepieDatepicker from 'litepie-datepicker';
 import Notifications from 'notiwind';
 
+
 const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
 const store = createStore({

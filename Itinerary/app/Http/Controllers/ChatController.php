@@ -19,9 +19,14 @@ class ChatController extends Controller
 {
     public function index($roomId, $skip)
     {
-        $chatList = Chat::where('room_id', $roomId)->orderBy('created_at', 'desc')->skip($skip)->take(10)->get();
+        $chatListCount = Chat::where('room_id', $roomId)->count();
+        if ($chatListCount <= $skip) {
+            return response()->json(['message' => 'no more Chat...']);
+        }
+
+        $chatList = Chat::where('room_id', $roomId)->orderBy('created_at', 'desc')->skip($skip)->take(13)->get();
+
         return response()->json($chatList);
-        // return Inertia::render('ChatRoom', ['chatList' => $chatList]);
     }
 
     public function store(Request $request, $roomId)
@@ -48,7 +53,7 @@ class ChatController extends Controller
         }
         $chat->save();
 
-        broadcast(new NewChat($chat, $chat->room_id))->toOthers();
+        broadcast(new NewChat($chat, $chat->room_id));
 
         return response()->json($chat, 201);
     }

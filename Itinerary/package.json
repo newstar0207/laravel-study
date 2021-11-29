@@ -33,7 +33,8 @@
         "litepie-datepicker": "^1.0.14",
         "notiwind": "^1.2.4",
         "pusher-js": "^7.0.3",
-        "v3-infinite-loading": "^1.0.1",
+        "uninstall": "^0.0.0",
+        "vue-intersect": "^3.0.0",
         "vuex": "^4.0.2"
     }
 }
