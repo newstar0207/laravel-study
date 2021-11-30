@@ -23,7 +23,7 @@
         </div>
 
         room.password : {{ room.password }}
-        <update-chat-room v-if="updateBtn" :room ='room' :roomUsers = 'roomUsers'></update-chat-room>
+        <update-chat-room v-if="updateBtn" :room ='room' ></update-chat-room>
         <chat-room-plan v-if="planBtn" :room='room' ></chat-room-plan>
         <chat-room-cost v-if="costBtn" :room='room'></chat-room-cost>
     </div>
@@ -50,8 +50,6 @@ export default {
         const updateBtn = ref(true)
         const planBtn = ref(false)
         const costBtn = ref(false)
-
-
 
         function updatePage() {
             updateBtn.value = true

@@ -16,15 +16,15 @@ q   <template>
                 <div v-if="$page.props.errors">{{ errors }}</div>
             </div>
 
-            <div class="border ">
-                <div v-for="roomUser in roomUsers" :key="roomUser.id" class="border-b-2 flex justify-between space-y-3 items-center">
+            <div class="border">
+                <div v-for="roomUser in updateRoomUsers" :key="roomUser.id" class="border-b-2 flex justify-between space-y-3 items-center">
                     <div v-if="room.owner == roomUser.name">
                         {{  roomUser.name }} owner
                     </div>
                     <div v-else>
                         {{  roomUser.name }}
                     </div>
-                    <svg @click="userBan(roomUser)"  xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-300 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg v-if="$page.props.user.id == room.id" @click="userBan(roomUser)"  xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-300 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
                 </div>
@@ -35,13 +35,13 @@ q   <template>
 <script>
 import { Inertia } from '@inertiajs/inertia'
 import DatePicker from './DatePicker.vue'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { onMounted } from 'vue'
 export default {
     props : [
         'room',
         'dateValue',
-        'roomUsers'
+
     ],
     components : {
         DatePicker,
@@ -57,11 +57,14 @@ export default {
             owner : null,
         })
 
+        const updateRoomUsers = ref([])
+
         onMounted(() => {
             form.title = props.room.title
             form.owner = props.room.owner
             form.period = [props.room.start_period, props.room.end_period]
             console.log('mount in updateChatroom')
+
         })
 
         const submit = () => {
@@ -97,6 +100,28 @@ export default {
             })
         }
 
+        var broadcastingUpdateChatRoom = Echo.join(`chat-room.${props.room.id}`)
+            .here((user) => {
+                console.log(user, 'UpdateChatRoom here!!!');
+                updateRoomUsers.value = user
+            })
+            .joining((user) => {
+                console.log(user, 'UpdateChatRoom joining!!!');
+                updateRoomUsers.value.push(...user)
+            })
+
+
+         function checkUser(user) {
+            for(let i =0; i < updateRoomUsers.value.length; i++) {
+                if (updateRoomUsers.value[i].id == user.id) {
+                    updateRoomUsers.value.splice(i,1)
+                    break
+                }
+            }
+        }
+
+
+
         return {
             deleteChatRoom,
             submit,
@@ -104,6 +129,9 @@ export default {
             form,
             onMounted,
             userBan,
+            broadcastingUpdateChatRoom,
+            updateRoomUsers,
+            checkUser
         }
     }
 }

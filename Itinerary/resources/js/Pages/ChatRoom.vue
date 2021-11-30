@@ -1,11 +1,10 @@
 <template>
     <!-- show room -->
     <container-layout>
-        <!-- <div class="flex flex-row grid grid-cols-20 h-screen  w-full"> -->
         <div class="flex flex-row grid grid-cols-20 min-h-[calc(100vh-72px)]">
 
             <!-- 리스트 -->
-            <chat-room-list :room='room' :roomUsers = 'roomUsers'></chat-room-list>
+            <chat-room-list :room='room'></chat-room-list>
 
 
 
@@ -27,7 +26,6 @@
 
                 <!-- 메시지 리스트 -->
                 <div class="flex flex-col flex-grow space-y-4 p-3 overflow-y-scroll h-96" id="messageBody" >
-                <!-- <InfiniteLoading :chats="chats" @infinite="load" top/> -->
                     <intersect v-if="callInter" @enter='inters(true)' @leave='inters(false)'>
                         <div class="">.</div>
                     </intersect>
@@ -48,7 +46,7 @@
 
                         <!-- 남이 쓴 -->
                         <div class="flex items-end" v-else>
-                            <svg @click="openModal(chat.id)"   xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-red-300	"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg @click="openModal(chat.id)"  xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 text-red-300"  fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <div class="flex flex-col space-y-2 text-xs max-w-xs mx-2 order-2 items-start">
@@ -57,7 +55,7 @@
                                     <img v-if="chat.image" :src="chat.image" alt="" width="200" height="200">
                                 </div>
                             </div>
-                            <img :src='p' :alt="$page.props.user.name" class="w-6 h-6 rounded-full order-1">
+                            <img :src='chat.user.profile_photo_url' :alt="chat.id" class="w-6 h-6 rounded-full order-1">
                         </div>
                     </div>
                 </div>
@@ -108,14 +106,9 @@
 import { reactive, ref  } from '@vue/reactivity'
 import UpdateChatRoom from './UpdateChatRoom.vue'
 import ContainerLayout from '../Layouts/ContainerLayout.vue'
-
 import JetConfirmationModal from '../Jetstream/ConfirmationModal.vue'
 import ChatRoomList from './ChatRoomList.vue'
-// import InfiniteLoading from "v3-infinite-loading";
-// import "v3-infinite-loading/lib/style.css";
 import { notify } from "notiwind"
-// import { onMounted } from '@vue/runtime-core'
-// import Intersect from 'vue-intersect'
 import Intersect from 'vue-intersect'
 
 
@@ -129,7 +122,6 @@ export default {
         ContainerLayout,
         JetConfirmationModal,
         ChatRoomList,
-        // InfiniteLoading,
         Intersect,
 
     },
@@ -145,11 +137,6 @@ export default {
         const callInter = ref(true)
 
 
-        // onMounted(() =>  {
-        //     scrollBottom()
-        // })
-
-
         function openModal(id){
             deleteChatId.value = id
             actionModal.value = true
@@ -159,51 +146,46 @@ export default {
         // infinite scroll
         let skip = 0
         function inters(enter) {
-            setTimeout(() => {
-                console.log('지연...')
-            }, 1000);
-            if(enter) {
-                console.log(skip, 'skip...')
-                axios.get(`/${props.room.id}/chat/${skip}`)
-                .then(response => {
-                    if (response.data.message){
-                        console.log(response.data.message, 'message...');
-                        callInter.value = false
-                        return
-                    }else {
+            setTimeout(() => { //Throttling
+                if(enter) {
+                    console.log(skip, 'skip...')
+                    axios.get(`/${props.room.id}/chat/${skip}`)
+                    .then(response => {
+                        if (response.data.message){
+                            console.log(response.data.message, 'message...');
+                            callInter.value = false
+                            return
+                        }else {
 
-                        var messageBody = document.querySelector('#messageBody');
-                        let preventScroll = messageBody.scrollHeight
-                        // let preventScroll = messageBody.scrollHeight - messageBody.scrollTop
+                            var messageBody = document.querySelector('#messageBody');
+                            let preventScroll = messageBody.scrollHeight
 
+                            console.log(response.data)
+                            const json = response.data
+                            for(let i = 0; i < json.length; i++) {
+                                console.log(json[i])
+                                chats.value.unshift(json[i])
+                            }
 
-                        console.log(response.data)
-                        // const scrollSum = 0
-                        const json = response.data
-                        // chats.value.push(...js);
-                        for(let i = 0; i < json.length; i++) {
-                            console.log(json[i])
-                            chats.value.unshift(json[i])
+                            setTimeout(() => {
+                                messageBody.scrollTo({ top : messageBody.scrollHeight - preventScroll})
+                            }, 0);
                         }
-
+                    }).catch(error => {
+                        console.error(error)
+                    })
+                    skip += 13;
+                    if (skip == 13 ) {
                         setTimeout(() => {
-                            messageBody.scrollTo({ top : messageBody.scrollHeight - preventScroll})
-                        }, 0);
+                            scrollBottom()
+                        }, 500);
                     }
-                }).catch(error => {
-                    console.error(error)
-                })
-                skip += 13;
-                if (skip == 13 ) {
-                    setTimeout(() => {
-                        scrollBottom()
-                    }, 500);
-                }
-            }else {
-                console.log('leaved...')
-            }
-        }
 
+                } else {
+                    console.log('leaved...')
+                }
+            }, 500);
+        }
 
         function submit() {
             const formData = new FormData()
@@ -215,14 +197,11 @@ export default {
             axios.post(`/room/${props.room.id}/chat`, formData,{
                 headers: { 'Content-Type': 'multipart/form-data' }
             }).then((response) => {
-                // chats.value.push(response.data);
-                // scrollBottom()
                 form.chat = ''
                 form.image = null
             }).catch((error) => {
                 console.error(error);
             })
-            // messageBody.scrollTop = messageBody.scrollHeight - messageBody.scrollTop;
         }
 
         function scrollBottom() {
@@ -268,7 +247,6 @@ export default {
                 notify({
                     group: "joinUser",
                     title: user.name,
-                    // text: user.roomId
                 }, 2000) // 2s
                 roomUsers.value.push(...user)
             })
@@ -277,9 +255,8 @@ export default {
                 notify({
                     group: "leavingUser",
                     title: user.name,
-                    // text: user.roomId
                 }, 2000) // 2s
-                checkUser()
+                checkUser(user.id)
             })
             .listen('NewChat', (e) => {
                 chats.value.push(e.chat)
@@ -295,9 +272,9 @@ export default {
             actionModal.value = true
         }
 
-        function checkUser(user) {
+        function checkUser(userId) {
             for(let i =0; i < roomUsers.value.length; i++) {
-                if (roomUsers.value[i].id == user.id) {
+                if (roomUsers.value[i].id == userId) {
                     roomUsers.value.splice(i,1)
                     break
                 }
@@ -313,13 +290,12 @@ export default {
             deleteChatInchats,
             clickChat,
             actionModal,
-            // load,
             openModal,
-            checkUser,
             roomUsers,
             scrollBottom,
             inters,
             callInter,
+            checkUser,
 
         }
     }

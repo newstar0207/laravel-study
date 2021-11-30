@@ -35,6 +35,7 @@ export default {
         })
 
         onMounted(() => {
+            // console.log()
             axios.get(`/room/${props.room.id}/schedule`)
             .then(response => {
                 console.log(response.data, 'schedules...')
