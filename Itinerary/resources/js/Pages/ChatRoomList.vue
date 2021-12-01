@@ -1,29 +1,26 @@
 <template>
     <div class="col-span-10 bg-white rounded shadow-lg p-4 my-4 ml-4 mr-4">
-
         <div class="bg-white">
-            <nav class="flex flex-col sm:flex-row">
+            <nav class="flex flex-col items-stretch sm:flex-row">
 
                 <!-- <Link href="/"> -->
-                <button @click="updatePage"  class="text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none text-blue-500 border-b-2 font-medium border-blue-500">
+                <button @click="updatePage"  :class="updateBtn == false ? 'text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none' : ' py-4 px-6 block text-blue-500 border-b-2 font-medium border-blue-500'">
                     Room
                 </button>
                 <!-- </Link> -->
-                <button @click='planPage'  class="text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none">
+                <button @click='planPage'  :class="planBtn == false ? 'text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none' : ' py-4 px-6 block text-blue-500 border-b-2 font-medium border-blue-500'">
                     Plan
                 </button>
-                <button @click="costPage"  class="text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none">
+                <button @click="costPage"  :class="costBtn == false ? 'text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none' : ' py-4 px-6 block text-blue-500 border-b-2 font-medium border-blue-500'">
                     Cost
                 </button>
-                <button  class="text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none">
-                    Tab 4
-                </button>
+                <!-- <button  :class=" == false ? 'text-gray-600 py-4 px-6 block hover:text-blue-500 focus:outline-none' : 'text-blue-500 border-b-2 font-medium border-blue-500'"> -->
+                    <!-- Tab 4 -->
+                <!-- </button> -->
             </nav>
 
         </div>
-
-        room.password : {{ room.password }}
-        <update-chat-room v-if="updateBtn" :room ='room' ></update-chat-room>
+        <update-chat-room v-if="updateBtn" :room ='room' :roomUsers = 'roomUsers' ></update-chat-room>
         <chat-room-plan v-if="planBtn" :room='room' ></chat-room-plan>
         <chat-room-cost v-if="costBtn" :room='room'></chat-room-cost>
     </div>
@@ -76,7 +73,6 @@ export default {
             planPage,
             costBtn,
             costPage,
-
         }
     }
 }

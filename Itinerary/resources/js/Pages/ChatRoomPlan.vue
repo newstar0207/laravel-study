@@ -1,4 +1,7 @@
 <template>
+
+    <!-- 새로운 스케줄 입력 -->
+
     <form @submit.prevent="submit()">
         <label>schedule</label>
         <input type="text" v-model="form.schedule">
@@ -7,12 +10,17 @@
         <button type="submit">submit</button>
     </form>
 
+
+    <!-- 스케줄 출력 -->
+
     <div>
         <div v-for="schedule in schedules" :key="schedule.id">
             <div class="border-b-2">
-                <div>{{ schedule.schedule }}</div>
+                <div v-if="schedule.iscomplete == 1" class="line-through">{{ schedule.schedule}}</div>
+                <div v-else>{{ schedule.schedule }}</div>
+                <div>{{schedule.date}}</div>
                 <div class="flex flex-row-reverse">
-                    <button>delete</button>
+                    <button @click="deleteSchedule(schedule.id)">delete</button>
                     <button @click="completeSchedule(schedule.id)">complete</button>
                 </div>
             </div>
@@ -39,9 +47,8 @@ export default {
             axios.get(`/room/${props.room.id}/schedule`)
             .then(response => {
                 console.log(response.data, 'schedules...')
-                for (let i = 0; i < response.data.length ; i++) {
-                    schedules.value.push(response.data[i])
-                }
+                let json = response.data
+                schedules.value.push(...json)
             }).catch(error => {
                 console.log(error)
             })
@@ -65,14 +72,44 @@ export default {
         }
 
         function completeSchedule(scheduleId){
-            axios.post(`/room/${props.room.id}/schdule/${scheduleId}`, {
-                complete : true,
+            axios.put(`/room/${props.room.id}/schedule/${scheduleId}`, {
+                iscomplete : true,
             }).then(response => {
                 console.log(response.data)
+                for(let i = 0; i < schedules.value.length; i++) {
+                    if(schedules.value[i].id == response.data.id){
+                        schedules.value[i].iscomplete = 1
+                        break
+                    }
+                }
+                schedules.value
             }).catch(error => {
                 console.log(error)
             })
         }
+
+        var broadcastingChatRoomPlan  = Echo.join(`chat-room.${props.room.id}`)
+            .listen('AddSchedule', (e) => {
+                console.log(e.schedule)
+                schedules.value.push(e.schedule)
+            }).listen('DeleteSchedule', (e) => {
+                for(let i = 0; i < schedules.value.length; i++) {
+                    if(schedules.value[i].id == e.scheduleId){
+                        schedules.value.splice(i,1)
+                        break
+                    }
+                }
+            })
+
+        function deleteSchedule(scheduleId){
+            axios.delete(`/room/${props.room.id}/schedule/${scheduleId}`)
+            .then(response => {
+                console.log(response.message)
+            }).catch(error => {
+                console.log(error)
+            })
+        }
+
 
         return {
             form,
@@ -81,6 +118,8 @@ export default {
             onMounted,
             schedules,
             completeSchedule,
+            broadcastingChatRoomPlan,
+            deleteSchedule,
         }
     }
 

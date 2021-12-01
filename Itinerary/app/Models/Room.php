@@ -26,7 +26,7 @@ class Room extends Model
 
     public function schedules()
     {
-        return $this->hasMany(Schedule::class)->latest()->get();
+        return $this->hasMany(Schedule::class)->oldest()->get();
     }
 
     public function materials()

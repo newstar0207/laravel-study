@@ -1,8 +1,18 @@
 q   <template>
-    <div class="flex flex-row ">
+    <div class="flex flex-row">
         <!-- 방 수정 (오너일 경우만 가능하게 바꿀것) -> 모달로 바꿀것-->
-        <div class="py-12">
-            <div class="">
+        <div class="w-full space-y-6">
+            <!-- {{  room }} -->
+            <div class="text-center text-base md:text-lg font-semibold mt-6">
+                {{ room.start_period }} ~ {{ room.end_period }}
+            </div>
+
+            <div class="w-full flex justify-around">
+                <button class="sm:w-auto px-9 py-4 mb-2 items-center text-base font-semibold focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-gray-900 focus:outline-none transition-colors duration-200 rounded-full block  bg-transparent hover:bg-blue-300 border border-blue-300 text-blue-600 hover:text-blue-200 ">update</button>
+                <button class="sm:w-auto px-9 py-4 mb-2 text-base items-center font-semibold focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-gray-900 focus:outline-none transition-colors duration-200 rounded-full block  bg-transparent hover:bg-red-300 border border-red-300 text-red-600 hover:text-red-200 ">cancel</button>
+            </div>
+
+            <!-- <div class="">
                 <form @submit.prevent="submit()">
                     <label>title</label>
                     <input id="title" required class="border-2 border-gray-300" v-model="form.title" />
@@ -14,17 +24,18 @@ q   <template>
                 </form>
                 <button class="bg-blue-500 hover:bg-blue-400" @click="deleteChatRoom">삭제</button>
                 <div v-if="$page.props.errors">{{ errors }}</div>
-            </div>
+            </div> -->
+
 
             <div class="border">
-                <div v-for="roomUser in updateRoomUsers" :key="roomUser.id" class="border-b-2 flex justify-between space-y-3 items-center">
+                <div v-for="roomUser in roomUsers" :key="roomUser.id" class="border-b-2 flex justify-between space-y-3 items-center">
                     <div v-if="room.owner == roomUser.name">
                         {{  roomUser.name }} owner
                     </div>
                     <div v-else>
                         {{  roomUser.name }}
                     </div>
-                    <svg v-if="$page.props.user.id == room.id" @click="userBan(roomUser)"  xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-300 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg v-if="$page.props.user.name == room.owner" @click="userBan(roomUser)"  xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-300 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                     </svg>
                 </div>
@@ -41,6 +52,7 @@ export default {
     props : [
         'room',
         'dateValue',
+        'roomUsers'
 
     ],
     components : {
@@ -57,8 +69,6 @@ export default {
             owner : null,
         })
 
-        const updateRoomUsers = ref([])
-
         onMounted(() => {
             form.title = props.room.title
             form.owner = props.room.owner
@@ -68,11 +78,6 @@ export default {
         })
 
         const submit = () => {
-            // Inertia.patch('/room/' + props.room.id , form, {
-            //     preserveScroll: true,
-            //     onSuccess: () => {
-            //     },
-            // });
             axios.patch('/room/' + props.room.id , form)
             .then((response) => {
                 form.title = response.data.title
@@ -100,28 +105,6 @@ export default {
             })
         }
 
-        var broadcastingUpdateChatRoom = Echo.join(`chat-room.${props.room.id}`)
-            .here((user) => {
-                console.log(user, 'UpdateChatRoom here!!!');
-                updateRoomUsers.value = user
-            })
-            .joining((user) => {
-                console.log(user, 'UpdateChatRoom joining!!!');
-                updateRoomUsers.value.push(...user)
-            })
-
-
-         function checkUser(user) {
-            for(let i =0; i < updateRoomUsers.value.length; i++) {
-                if (updateRoomUsers.value[i].id == user.id) {
-                    updateRoomUsers.value.splice(i,1)
-                    break
-                }
-            }
-        }
-
-
-
         return {
             deleteChatRoom,
             submit,
@@ -129,9 +112,6 @@ export default {
             form,
             onMounted,
             userBan,
-            broadcastingUpdateChatRoom,
-            updateRoomUsers,
-            checkUser
         }
     }
 }

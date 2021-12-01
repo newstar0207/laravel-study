@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\AddSchedule;
+use App\Events\DeleteSchedule;
 use App\Models\Chat;
+use App\Models\Cost;
 use App\Models\Room;
 use App\Models\Schedule;
 use App\Models\User;
@@ -54,9 +57,10 @@ class RoomController extends Controller
 
         auth()->user()->rooms()->toggle($room->id);
 
-        $roomList = auth()->user()->rooms();
+        // $roomList = auth()->user()->rooms();
         // dd($roomList);
-        return Redirect::route('room.index');
+        // return Redirect::route('room.index');
+        return response()->json(['room' => $room]);
     }
 
     public function update(Request $request, $id)
@@ -106,10 +110,26 @@ class RoomController extends Controller
 
     public function find(Request $request)
     {
-        $isExist = DB::table('rooms')->where('password', $request->searchRoomPassword)->first();
-        auth()->user()->rooms()->toggle($isExist->id);
-        $roomList = User::find(Auth::user()->id)->rooms()->get();
-        return Redirect::route('room.index');
+        $validator = Validator::make($request->all(), [
+            'password' => 'required',
+        ]);
+
+        // 이미 가입되어있는 사용자 한번더 하면 없어짐 어칼지 생각할것
+        // 수정필요
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+
+
+        $isExist = DB::table('rooms')->where('password', $request->password)->first();
+
+        if ($isExist) {
+            auth()->user()->rooms()->toggle($isExist->id);
+            return response()->json(['room' => $isExist], 200);
+        } else {
+            return response()->json(['message' => 'error'], 400);
+        }
     }
 
     public function addSchedule(Request $request, $roomId)
@@ -128,6 +148,10 @@ class RoomController extends Controller
         $schedule->date = $request->date;
         $schedule->room_id = $roomId;
         $schedule->save();
+
+        broadcast(new AddSchedule($schedule, $schedule->room_id));
+
+        return response()->json(['message' => 'complete']);
     }
 
 
@@ -137,19 +161,21 @@ class RoomController extends Controller
         return response()->json($schedules);
     }
 
-    public function completeSchedule(Request $request, $scheduleId)
+    public function completeSchedule($roomId, $scheduleId)
     {
-        $validator = Validator::make($request->all(), [
-            'iscomplete' => 'required',
-        ]);
+        // $validator = Validator::make($request->all(), [
+        //     'iscomplete' => 'required',
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors());
-        }
+        // if ($validator->fails()) {
+        //     return response()->json($validator->errors());
+        // }
 
         $schedule = Schedule::find($scheduleId);
         $schedule->iscomplete = true;
         $schedule->save();
+
+        return response()->json($schedule);
     }
 
     public function userBan(Room $room, User $user)
@@ -164,5 +190,72 @@ class RoomController extends Controller
             return route('room.index');
         }
         return response()->json($userList);
+    }
+
+    public function deleteSchedule($roomId, $scheduleId)
+    {
+        $schedule = Schedule::find($scheduleId);
+        // dd($schedule);
+        $schedule->delete();
+
+        broadcast(new DeleteSchedule($roomId, $scheduleId));
+
+        return response()->json(['message' => 'complete']);
+    }
+
+    public function setCost(Request $request, $roomId)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'food_cost' => 'required',
+            'room_cost' => 'required',
+            'other_cost' => 'required',
+            'tran_cost' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+
+        $cost = new Cost();
+        $cost->food_cost = (int)$request->food_cost;
+        $cost->room_cost = (int)$request->room_cost;
+        $cost->tran_cost = (int)$request->tran_cost;
+        $cost->other_cost = (int)$request->other_cost;
+        $cost->room_id = $roomId;
+
+        $sum = $cost->food_cost + $cost->room_cost + $cost->tran_cost + $cost->other_cost;
+        $cost->sum_cost = $sum;
+        $cost->save();
+
+        return response()->json($cost);
+    }
+
+    public function updateCost(Request $request, $roomId)
+    {
+
+        $validator = Validator::make($request->all(), [
+            'food_cost' => 'required',
+            'room_cost' => 'required',
+            'other_cost' => 'required',
+            'tran_cost' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+
+        $cost = Cost::where('room_id', $roomId);
+        $cost->food_cost = (int)$request->food_cost;
+        $cost->room_cost = (int)$request->room_cost;
+        $cost->tran_cost = (int)$request->tran_cost;
+        $cost->other_cost = (int)$request->other_cost;
+        $cost->room_id = $roomId;
+
+        $sum = $cost->food_cost + $cost->room_cost + $cost->tran_cost + $cost->other_cost;
+        $cost->sum_cost = $sum;
+        $cost->save();
+
+        return response()->json($cost);
     }
 }

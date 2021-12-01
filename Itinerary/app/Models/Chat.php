@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Chat extends Model
 {
     use HasFactory;
-    // 관계 with()
 
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

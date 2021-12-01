@@ -1,4 +1,6 @@
 <template>
+
+<!--  지금 안쓰임!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 -->
     <div class="border-2 border-gray-500">
         create room...
         <div class="py-12">
@@ -7,7 +9,7 @@
                     <label>title</label>
                     <input id="title" required class="border-2 border-gray-300" v-model="form.title" />
                     <label>period</label>
-                    <date-picker  @period='periodPicker' v-model="period"></date-picker>
+                    <date-picker @period='periodPicker' v-model="period"></date-picker>
                     <!-- {{ period }} -->
                     <!-- <input id="period" required class="border-2 border-gray-300" v-model="form.period" /> -->
                     <button type="submit" class="bg-blue-500 hover:bg-blue-400">Submit</button>

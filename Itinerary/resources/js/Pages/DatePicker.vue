@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <litepie-datepicker :formatter='formatter'  v-model="dateValue"></litepie-datepicker>
+    <litepie-datepicker :formatter='formatter' as-single use-range v-model="dateValue"></litepie-datepicker>
   </div>
   <div>
       <!-- {{ date }} -->
@@ -18,7 +18,6 @@
     },
     props : [
         'date',
-
     ],
     setup(props, context) {
         const dateValue = ref([]);

@@ -24,7 +24,7 @@ class ChatController extends Controller
             return response()->json(['message' => 'no more Chat...']);
         }
 
-        $chatList = Chat::where('room_id', $roomId)->orderBy('created_at', 'desc')->skip($skip)->take(13)->get();
+        $chatList = Chat::where('room_id', $roomId)->with('user')->orderBy('created_at', 'desc')->skip($skip)->take(13)->get();
 
         return response()->json($chatList);
     }

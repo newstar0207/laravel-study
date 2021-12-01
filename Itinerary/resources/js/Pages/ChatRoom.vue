@@ -4,7 +4,7 @@
         <div class="flex flex-row grid grid-cols-20 min-h-[calc(100vh-72px)]">
 
             <!-- 리스트 -->
-            <chat-room-list :room='room'></chat-room-list>
+            <chat-room-list :room='room' :roomUsers="roomUsers"></chat-room-list>
 
 
 
@@ -55,7 +55,7 @@
                                     <img v-if="chat.image" :src="chat.image" alt="" width="200" height="200">
                                 </div>
                             </div>
-                            <img :src='chat.user.profile_photo_url' :alt="chat.id" class="w-6 h-6 rounded-full order-1">
+                            <img :src='chat.user.profile_photo_url' :alt="chat.user.name" class="w-6 h-6 rounded-full order-1">
                         </div>
                     </div>
                 </div>
@@ -248,7 +248,7 @@ export default {
                     group: "joinUser",
                     title: user.name,
                 }, 2000) // 2s
-                roomUsers.value.push(...user)
+                roomUsers.value.push(user)
             })
             .leaving((user) => {
                 console.log(user.name, 'leaving!!!');
