@@ -40,6 +40,7 @@ class NewChat implements ShouldBroadcast
      */
     public function broadcastOn()
     {
+
         return new PresenceChannel('chat-room.' . $this->roomId);
     }
 }

@@ -5,15 +5,14 @@ namespace App\Http\Controllers;
 use App\Events\DeleteChat;
 use App\Events\NewChat;
 use App\Models\Chat;
-use App\Models\Room;
-use Illuminate\Contracts\Validation\Rule;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+// use Image;
+
 
 class ChatController extends Controller
 {
@@ -48,12 +47,14 @@ class ChatController extends Controller
         if ($request->hasFile('image')) {
             $newImageName = time() . $request->file('image')->getClientOriginalName();
             $request->image->move(public_path('/storage/images'), $newImageName);
+            // $imageResize = Image::make(public_path('/storage/images'), $newImageName)->fit(1200, 1200);
             $url = asset('storage/images/' . $newImageName);
             $chat->image = $url;
         }
         $chat->save();
+        $chat = Chat::where('id', $chat->id)->with('user')->first();
 
-        broadcast(new NewChat($chat, $chat->room_id));
+        broadcast(new NewChat($chat, $roomId));
 
         return response()->json($chat, 201);
     }

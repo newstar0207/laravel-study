@@ -21,7 +21,10 @@ class RoomController extends Controller
     public function index()
     {
         $roomList = User::find(auth()->user()->id)->rooms()->get();
-        return Inertia::render('Container', ['roomList' => $roomList]);
+
+        $chatImage = Chat::where('image', '!=', 'null')->with('room')->get();
+
+        return Inertia::render('Container', ['roomList' => $roomList, 'chatImage' => $chatImage]);
     }
 
     public function rand_color()
@@ -91,7 +94,7 @@ class RoomController extends Controller
         // 수정 필요!!
         $room = Room::find($roomId);
         // $chatList = Chat::where('room_id', $roomId)->paginate(5)->get();
-        return Inertia::render('ChatRoom', ['room' => $room]);
+        return Inertia::render('ChatRoomContainer', ['room' => $room]);
         // return Inertia::render('ChatRoom', ['room' => $room]);
     }
 

@@ -1,6 +1,6 @@
 <template>
-    <div class="bg-gray-100 h-screen">
-        <nav class="bg-white border-b border-gray-100 ">
+    <div class="bg-gray-100 min-h-screen flex flex-col">
+        <nav class="bg-white border-b border-gray-100">
             <!-- Primary Navigation Menu -->
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
@@ -101,7 +101,9 @@
             </div>
         </nav>
         <!-- Page Content 본문 내용 들어가는 부분 -->
-        <slot class="flex-grow"></slot>
+        <main class="flex-1 flex">
+            <slot></slot>
+        </main>
 
 
         <!-- notification -->

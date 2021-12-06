@@ -1,5 +1,5 @@
 <template>
-    <div class="col-span-10 bg-white rounded shadow-lg p-4 my-4 ml-4 mr-4">
+    <div class="bg-white rounded shadow-lg p-4 w-8/12">
         <div class="bg-white">
             <nav class="flex flex-col items-stretch sm:flex-row">
 

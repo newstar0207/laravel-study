@@ -20,7 +20,7 @@ Broadcast::channel('chat-room.{roomId}', function ($user, $roomId) {
     // }
     // return ['id' => $user->id, 'roomId' => $roomId];
     if (Auth::check()) {
-        return ['id' => $user->id, 'name' => $user->name, 'roomId' => $roomId];
+        return ['id' => $user->id, 'name' => $user->name, 'roomId' => $roomId, 'profile_photo_path' => $user->profile_photo_path];
     }
 });
 
