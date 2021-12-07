@@ -2,7 +2,6 @@
     <container-layout>
         <chat-user :room="room" :roomUsers="roomUsers"></chat-user>
 
-
         <div class="flex flex-col w-full bg-blue-50 rounded-lg drop-shadow-lg m-8">
             <chat-room-update :room='room'></chat-room-update>
             <chat-room-cost :room='room'></chat-room-cost>

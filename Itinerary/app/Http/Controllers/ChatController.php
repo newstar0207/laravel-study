@@ -45,7 +45,7 @@ class ChatController extends Controller
         if ($request->hasFile('image')) {
             $newImageName = time() . $request->file('image')->getClientOriginalName();
             $request->image->move(public_path('/storage/images'), $newImageName);
-            Image::make(public_path('/storage/images') . '/' . $newImageName)->resize(700, 700)->save();
+            Image::make(public_path('/storage/images') . '/' . $newImageName)->fit(700, 700)->save();
             $url = asset('storage/images/' . $newImageName);
             $chat->image = $url;
         }

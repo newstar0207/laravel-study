@@ -15,6 +15,7 @@ class CreateLikesImagesTable extends Migration
     {
         Schema::create('likes_images', function (Blueprint $table) {
             $table->id();
+
             $table->timestamps();
         });
     }

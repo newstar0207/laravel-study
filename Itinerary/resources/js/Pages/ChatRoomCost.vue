@@ -1,44 +1,59 @@
 <template>
-    <!-- <div class="bg-white rounded-lg drop-shadow-lg p-6 m-6">
-        <label>food</label>
-        <input required class="border-2 border-gray-300" v-model="form.food" />
-        <label>room</label>
-        <input required class="border-2 border-gray-300" v-model='form.room'>
-        <label>tran</label>
-        <input required class="border-2 border-gray-300" v-model='form.tran'>
-        <label>other</label>
-        <input required class="border-2 border-gray-300" v-model='form.other'>
-        <button @click="submit()" class="bg-blue-500 hover:bg-blue-400">Submit</button>
-        <button @click="update()" class="bg-blue-500 hover:bg-blue-400">update</button>
-    </div> -->
-
 
     <div class="p-6">
 
-        <div class="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <div class="ml-4">
-                Cost
+        <div class="flex items-center justify-between">
+            <div class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div class="ml-2 font-semibold text-xl text-gray-400">
+                    Cost
+                </div>
             </div>
+
+            <div class="text-green-500">더치패이</div>
+
         </div>
 
-        <div>
-                room
+        <div class="flex flex-col mt-5">
+            <div class="w-full lg:w-6/12 px-4 flex justify-around space-x-6">
+                <div class="relative w-full mb-3">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                        Room
+                    </label>
+                    <div class="border-0 px-3 py-3  bg-white rounded text-sm w-full">
+                        20000
+                    </div>
+                </div>
+                <div class="relative w-full mb-3">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                        Food
+                    </label>
+                    <div class="border-0 px-3 py-3  bg-white rounded text-sm w-full">
+                        20000
+                    </div>
+                </div>
             </div>
-            <div>
-                food
+            <div class="w-full lg:w-6/12 px-4 flex justify-around space-x-6">
+                <div class="relative w-full mb-3">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                        Tran
+                    </label>
+                    <div class="border-0 px-3 py-3  bg-white rounded text-sm w-full">
+                        20000
+                    </div>
+                </div>
+                <div class="relative w-full mb-3">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                        Other
+                    </label>
+                    <div class="border-0 px-3 py-3  bg-white rounded text-sm w-full">
+                        20000
+                    </div>
+                </div>
             </div>
-            <div>
-                tran
-            </div>
-            <div>
-                other
-            </div>
-            <div class="text-green-400">
-                더치패이
-            </div>
+        </div>
 
     </div>
 
@@ -101,7 +116,7 @@ export default {
             other : '',
         })
 
-        const costBtn = ref(true)
+        const costBtn = ref(false)
 
         // 1. 리스트를 불러와야함 -> 브로드캐스팅으로 해야할듯 함
         // 2. 처음을 어캐할지 생각중...
