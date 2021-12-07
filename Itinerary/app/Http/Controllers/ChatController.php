@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
-// use Image;
+use Intervention\Image\Facades\Image;
 
 
 class ChatController extends Controller
@@ -30,8 +30,6 @@ class ChatController extends Controller
 
     public function store(Request $request, $roomId)
     {
-        // dd($request->hasFile('image'));
-
         $validator = Validator::make($request->all(), [
             'chat' => 'required_if:$request->image,==,false',
             'image' => 'required_if:$request->chat,==,false',
@@ -47,13 +45,14 @@ class ChatController extends Controller
         if ($request->hasFile('image')) {
             $newImageName = time() . $request->file('image')->getClientOriginalName();
             $request->image->move(public_path('/storage/images'), $newImageName);
-            // $imageResize = Image::make(public_path('/storage/images'), $newImageName)->fit(1200, 1200);
+            Image::make(public_path('/storage/images') . '/' . $newImageName)->resize(700, 700)->save();
             $url = asset('storage/images/' . $newImageName);
             $chat->image = $url;
         }
         $chat->save();
-        $chat = Chat::where('id', $chat->id)->with('user')->first();
 
+
+        $chat = Chat::where('id', $chat->id)->with('user')->first();
         broadcast(new NewChat($chat, $roomId));
 
         return response()->json($chat, 201);

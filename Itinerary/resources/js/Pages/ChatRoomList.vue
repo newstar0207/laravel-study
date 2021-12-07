@@ -20,7 +20,7 @@
             </nav>
 
         </div>
-        <update-chat-room v-if="updateBtn" :room ='room' :roomUsers = 'roomUsers' ></update-chat-room>
+        <!-- <update-chat-room v-if="updateBtn" :room ='room' :roomUsers = 'roomUsers' ></update-chat-room> -->
         <chat-room-plan v-if="planBtn" :room='room' ></chat-room-plan>
         <chat-room-cost v-if="costBtn" :room='room'></chat-room-cost>
     </div>
@@ -28,7 +28,7 @@
 
 </template>
 <script>
-import UpdateChatRoom from './UpdateChatRoom.vue'
+import ChatRoomUpdate from './ChatRoomUpdate.vue'
 import { ref } from 'vue'
 import ChatRoomPlan from './ChatRoomPlan.vue'
 import ChatRoomCost from './ChatRoomCost.vue'
@@ -39,7 +39,7 @@ export default {
         'roomUsers'
     ],
     components : {
-        UpdateChatRoom,
+        ChatRoomUpdate,
         ChatRoomPlan,
         ChatRoomCost,
     },

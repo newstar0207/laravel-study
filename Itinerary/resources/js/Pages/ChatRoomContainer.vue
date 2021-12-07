@@ -1,7 +1,16 @@
 <template>
     <container-layout>
         <chat-user :room="room" :roomUsers="roomUsers"></chat-user>
-        <chat-room :room="room"></chat-room>
+
+
+        <div class="flex flex-col w-full bg-blue-50 rounded-lg drop-shadow-lg m-8">
+            <chat-room-update :room='room'></chat-room-update>
+            <chat-room-cost :room='room'></chat-room-cost>
+            <chat-room-plan :room='room'></chat-room-plan>
+        </div>
+
+        <chat-room class="fixed" :room="room"></chat-room>
+
     </container-layout>
 </template>
 <script>
@@ -11,6 +20,9 @@ import { onBeforeUnmount } from '@vue/runtime-core'
 import { notify } from "notiwind"
 import ContainerLayout from '../Layouts/ContainerLayout.vue'
 import ChatUser from './ChatUser.vue'
+import ChatRoomUpdate from './ChatRoomUpdate.vue'
+import ChatRoomPlan from './ChatRoomPlan.vue'
+import ChatRoomCost from './ChatRoomCost.vue'
 
 
 export default {
@@ -21,6 +33,10 @@ export default {
         ChatRoom,
         ContainerLayout,
         ChatUser,
+        ChatRoomUpdate,
+        ChatRoomPlan,
+        ChatRoomCost,
+
     },
     setup(props) {
 
