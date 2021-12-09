@@ -1,7 +1,37 @@
 <template>
-    <Head title="Welcome" />
 
-    <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
+    <div class="bg-no-repeat bg-cover bg-center relative"  style="background-image: url(https://cdn.pixabay.com/photo/2020/05/30/10/08/video-conference-5238383_1280.jpg);"><div class="absolute bg-gradient-to-b from-green-500 to-blue-400 opacity-75 inset-0 z-0"></div>
+        <div class="min-h-screen sm:flex sm:flex-row justify-center">
+            <div class="flex items-center z-10 space-x-6">
+                <div class="flex flex-col text-white">
+                    <h1 class="mb-3 font-bold text-5xl flex flex-col">
+                        Hi 💕 Welcome Itinerary
+                    </h1>
+                    <div class="flex">
+                        <p class="pr-3">Create a plan in the comfort of chatting with your friends</p>
+                        <div>
+                            <button v-if="loginCom != false & registerCom != true" @click="registerCom = true, loginCom = false " class="ml-2 text-yellow-200 underline text-2xl">User Register</button>
+                            <button v-if="loginCom == false & registerCom == true" @click="registerCom = false, loginCom = true " class="ml-2 text-yellow-200 underline text-2xl">User login</button>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <Link v-if="$page.props.user" :href="route('room.index')" class="ml-2 text-red-400 underline text-5xl">
+                        Room
+                    </Link>
+                    <div v-else>
+                        <login v-if="loginCom"></login>
+                        <register v-if="registerCom"></register>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                        <!-- <Link v-if="canRegister" :href="route('register')" class="ml-2 text-yellow-200 underline text-2xl">
+                            User Register
+                        </Link> -->
+
+    <!-- <div class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
         <div v-if="canLogin" class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
             <Link v-if="$page.props.user" :href="route('dashboard')" class="text-sm text-gray-700 underline">
                 Dashboard
@@ -17,81 +47,20 @@
                 </Link>
             </template>
         </div>
-    </div>
+    </div> -->
 </template>
-
-<style scoped>
-    .bg-gray-100 {
-        background-color: #f7fafc;
-        background-color: rgba(247, 250, 252, var(--tw-bg-opacity));
-    }
-
-    .border-gray-200 {
-        border-color: #edf2f7;
-        border-color: rgba(237, 242, 247, var(--tw-border-opacity));
-    }
-
-    .text-gray-400 {
-        color: #cbd5e0;
-        color: rgba(203, 213, 224, var(--tw-text-opacity));
-    }
-
-    .text-gray-500 {
-        color: #a0aec0;
-        color: rgba(160, 174, 192, var(--tw-text-opacity));
-    }
-
-    .text-gray-600 {
-        color: #718096;
-        color: rgba(113, 128, 150, var(--tw-text-opacity));
-    }
-
-    .text-gray-700 {
-        color: #4a5568;
-        color: rgba(74, 85, 104, var(--tw-text-opacity));
-    }
-
-    .text-gray-900 {
-        color: #1a202c;
-        color: rgba(26, 32, 44, var(--tw-text-opacity));
-    }
-
-    @media (prefers-color-scheme: dark) {
-        .dark\:bg-gray-800 {
-            background-color: #2d3748;
-            background-color: rgba(45, 55, 72, var(--tw-bg-opacity));
-        }
-
-        .dark\:bg-gray-900 {
-            background-color: #1a202c;
-            background-color: rgba(26, 32, 44, var(--tw-bg-opacity));
-        }
-
-        .dark\:border-gray-700 {
-            border-color: #4a5568;
-            border-color: rgba(74, 85, 104, var(--tw-border-opacity));
-        }
-
-        .dark\:text-white {
-            color: #fff;
-            color: rgba(255, 255, 255, var(--tw-text-opacity));
-        }
-
-        .dark\:text-gray-400 {
-            color: #cbd5e0;
-            color: rgba(203, 213, 224, var(--tw-text-opacity));
-        }
-    }
-</style>
-
 <script>
-    import { defineComponent } from 'vue'
+    import { defineComponent, ref } from 'vue'
     import { Head, Link } from '@inertiajs/inertia-vue3';
+    import Login from '../Pages/Auth/Login.vue'
+    import Register from '../Pages/Auth/Register.vue'
 
     export default defineComponent({
         components: {
             Head,
             Link,
+            Login,
+            Register,
         },
 
         props: {
@@ -99,6 +68,17 @@
             canRegister: Boolean,
             laravelVersion: String,
             phpVersion: String,
+        },
+
+        setup(props) {
+
+            const registerCom = ref(false)
+            const loginCom = ref(true)
+
+            return {
+                registerCom,
+                loginCom,
+            }
         }
     })
 </script>

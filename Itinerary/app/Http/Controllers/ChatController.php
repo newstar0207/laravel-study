@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ChatImageUpdate;
 use App\Events\DeleteChat;
 use App\Events\NewChat;
 use App\Models\Chat;
@@ -81,6 +82,8 @@ class ChatController extends Controller
             $chat->desc = $request->desc;
             $chat->save();
         }
+
+        broadcast(new ChatImageUpdate())->toOthers();
 
         return Redirect::route('room.index');
     }

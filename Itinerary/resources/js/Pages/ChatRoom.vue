@@ -166,7 +166,7 @@ export default {
         const openChat = ref(false)
 
         function destroyInter(){
-            console.log('destryInter...')
+            console.log('destroyInter...')
         }
 
         function changeInter(){
@@ -192,7 +192,7 @@ export default {
                             callInter.value = false
                             return
                         }else {
-                            var messageBody = document.querySelector('#messageBody');
+                            let messageBody = document.querySelector('#messageBody');
                             let preventScroll = messageBody.scrollHeight
                             // console.log(response.data)
                             const json = response.data

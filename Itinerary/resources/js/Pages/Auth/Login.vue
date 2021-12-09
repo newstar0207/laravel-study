@@ -3,7 +3,7 @@
 
     <jet-authentication-card>
         <template #logo>
-            <jet-authentication-card-logo />
+            <p class="text-4xl font-mono font-bold text-white">Login</p>
         </template>
 
         <jet-validation-errors class="mb-4" />
@@ -34,6 +34,7 @@
                 <Link v-if="canResetPassword" :href="route('password.request')" class="underline text-sm text-gray-600 hover:text-gray-900">
                     Forgot your password?
                 </Link>
+
 
                 <jet-button class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Log in
@@ -69,7 +70,7 @@
 
         props: {
             canResetPassword: Boolean,
-            status: String
+            status: String,
         },
 
         data() {
