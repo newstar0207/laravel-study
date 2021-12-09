@@ -8,7 +8,6 @@
             <!-- </div> -->
         </div>
 
-
         <!-- 모달 -->
         <jet-confirmation-modal :show="actionModal" @close="actionModal = false" >
             <template #title>
@@ -26,7 +25,7 @@
 
 
         <!-- chatting -->
-        <div v-if="openChat == true" class="fixed bottom-0 right-0 flex flex-col items-end ml-6 w-full">
+        <div v-show="openChat == true" class="fixed bottom-0 right-0 flex flex-col items-end ml-6 w-full">
             <div class="mr-5 flex flex-col mb-5 drop-shadow-3xl sm:w-1/2 md:w-1/3 lg:w-1/4 rounded-xl overflow-hidden">
 
             <!-- admin profile -->
@@ -54,8 +53,8 @@
             <div class="flex flex-col bg-white px-2 chat-services expand overflow-auto">
 
                 <div class="flex flex-col flex-grow space-y-4 p-3 overflow-y-scroll h-96" id="messageBody">
-                <intersect v-if="callInter" @enter='inters(true)' @leave='inters(false)'>
-                    <div class="text-black">more..</div>
+                <intersect v-if="callInter" @enter='inters(true)' @leave='inters(false)' @destroyed='destroyInter' @change='changeInter'>
+                    <div  class="text-black text-center text-gray-300 target">more..</div>
                 </intersect>
                 <div v-for="chat in chats" :key="chat.id">
                     <!-- 내가 쓴 -->
@@ -154,7 +153,7 @@ export default {
         Intersect,
 
     },
-    setup(props){
+    setup(props, context){
         const form = reactive({
             chat: null,
             image: null,
@@ -166,6 +165,14 @@ export default {
         const callInter = ref(true)
         const openChat = ref(false)
 
+        function destroyInter(){
+            console.log('destryInter...')
+        }
+
+        function changeInter(){
+            console.log('changeInter')
+        }
+
 
         function openModal(id){
             deleteChatId.value = id
@@ -176,14 +183,12 @@ export default {
         // infinite scroll
         const skip = ref(0)
         function inters(enter) {
-            console.log('enter...')
             setTimeout(() => { //Throttling
                 if(enter) {
-                    // console.log(skip.value, 'skip.value...')
+                    console.log('enter...')
                     axios.get(`/${props.room.id}/chat/${skip.value}`)
                     .then(response => {
                         if (response.data.message){
-                            // console.log(response.data.message, 'message...');
                             callInter.value = false
                             return
                         }else {
@@ -192,10 +197,8 @@ export default {
                             // console.log(response.data)
                             const json = response.data
                             for(let i = 0; i < json.length; i++) {
-                                // console.log(json[i])
                                 chats.value.unshift(json[i])
                             }
-
                             setTimeout(() => {
                                 messageBody.scrollTo({ top : messageBody.scrollHeight - preventScroll})
                             }, 0);
@@ -316,6 +319,10 @@ export default {
             closeChatting,
             openChatting,
             skip,
+            destroyInter,
+            changeInter,
+
+
         }
     }
 

@@ -42,8 +42,8 @@
             if(props.date == null) {
                 return
             }
-            dateValue.value[0] = props.date.start_period
-            dateValue.value[1] = props.date.end_period
+            dateValue.value[0] = props.date[0]
+            dateValue.value[1] = props.date[1]
             context.emit('period', dateValue.value)
         })
 
@@ -57,4 +57,4 @@
 
   }
 </script>
-// https://chodragon9.github.io/blog/composition-api-rfc-migration/#state
+

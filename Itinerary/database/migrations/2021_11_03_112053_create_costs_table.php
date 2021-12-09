@@ -16,12 +16,12 @@ class CreateCostsTable extends Migration
         Schema::create('costs', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->integer('room_id');
-            $table->integer('food_cost');
-            $table->integer('room_cost');
-            $table->integer('other_cost');
-            $table->integer('tran_cost');
-            $table->integer('sum_cost');
+            $table->integer('room_id')->unique();
+            $table->integer('food_cost')->default(0);
+            $table->integer('room_cost')->default(0);
+            $table->integer('other_cost')->default(0);
+            $table->integer('tran_cost')->default(0);
+            $table->integer('sum_cost')->default(0);
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
         });
     }

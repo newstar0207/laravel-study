@@ -19,4 +19,9 @@ class Chat extends Model
     {
         return $this->belongsTo(Room::class);
     }
+
+    public function likes()
+    {
+        return $this->belongsToMany(Like::class);
+    }
 }

@@ -2,17 +2,15 @@
 
 namespace App\Events;
 
-use App\Models\Chat;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NewChat implements ShouldBroadcast
+class CheckUser implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -22,14 +20,12 @@ class NewChat implements ShouldBroadcast
      * @return void
      */
 
-    public $chat;
+    public $userId;
     public $roomId;
 
-
-
-    public function __construct(Chat $chat, $roomId)
+    public function __construct($userId, $roomId)
     {
-        $this->chat = $chat;
+        $this->userId = $userId;
         $this->roomId = $roomId;
     }
 

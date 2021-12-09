@@ -9,6 +9,14 @@ class Room extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'password',
+        'title',
+        'start_period',
+        'end_period',
+        'owner'
+    ];
+
     public function chats()
     {
         return $this->hasMany(Chat::class);

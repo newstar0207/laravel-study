@@ -1,7 +1,6 @@
 <template>
 
     <div class="p-6">
-
         <div class="flex items-center justify-between">
             <div class="flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -11,28 +10,22 @@
                     Cost
                 </div>
             </div>
-
-            <div class="text-green-500">더치패이</div>
-
+            <p @click="costBtn = true" class="text-green-500 underline">update Cost</p>
         </div>
 
         <div class="flex flex-col mt-5">
             <div class="w-full lg:w-6/12 px-4 flex justify-around space-x-6">
                 <div class="relative w-full mb-3">
                     <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-                        Room
+                        Food
                     </label>
-                    <div class="border-0 px-3 py-3  bg-white rounded text-sm w-full">
-                        20000
-                    </div>
+                    <div class="border-0 px-3 py-3  bg-white rounded text-sm w-full">{{ originData.roomFood }}</div>
                 </div>
                 <div class="relative w-full mb-3">
                     <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
-                        Food
+                        Room
                     </label>
-                    <div class="border-0 px-3 py-3  bg-white rounded text-sm w-full">
-                        20000
-                    </div>
+                    <div class="border-0 px-3 py-3  bg-white rounded text-sm w-full">{{ originData.roomRoom }}</div>
                 </div>
             </div>
             <div class="w-full lg:w-6/12 px-4 flex justify-around space-x-6">
@@ -40,24 +33,34 @@
                     <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
                         Tran
                     </label>
-                    <div class="border-0 px-3 py-3  bg-white rounded text-sm w-full">
-                        20000
-                    </div>
+                    <div class="border-0 px-3 py-3  bg-white rounded text-sm w-full">{{ originData.roomTran }}</div>
                 </div>
                 <div class="relative w-full mb-3">
                     <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
                         Other
                     </label>
-                    <div class="border-0 px-3 py-3  bg-white rounded text-sm w-full">
-                        20000
-                    </div>
+                    <div class="border-0 px-3 py-3  bg-white rounded text-sm w-full">{{ originData.roomOther }}</div>
+                </div>
+            </div>
+            <div class="w-full lg:w-6/12 px-4 flex justify-around space-x-6">
+                <div class="relative w-full mb-3">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                        Sum
+                    </label>
+                    <div class="border-0 px-3 py-3  bg-white rounded text-sm w-full">{{ sum }}</div>
+                </div>
+                <div class="relative w-full mb-3">
+                    <label class="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                        Dutch Pay
+                    </label>
+                    <div class="border-0 px-3 py-3  bg-white rounded text-sm w-full text-red-500">{{ dutchPay }}</div>
                 </div>
             </div>
         </div>
 
     </div>
 
-    <jet-dialog-modal :show="costBtn" @close="costBtn = false">
+    <jet-dialog-modal :show="costBtn" @close="costBtn = false, costBtnClose()">
         <template #title>
             <div>Calculate Cost...</div>
         </template>
@@ -90,19 +93,22 @@
                 <input v-model="form.other" autocomplete="false" type="text" class="py-1 px-1 outline-none block h-full w-full">
             </div>
         </div>
+        <div class="font-bold text-red-700">{{ errorMessage }}</div>
         </template>
         <template #footer>
-            <button @click="submit()" class="rounded text-gray-100 px-3 py-1 bg-blue-500 hover:shadow-inner hover:bg-blue-700">Save</button>
+            <!-- <button @click="submit()" class="rounded text-gray-100 px-3 py-1 bg-blue-500 hover:shadow-inner hover:bg-blue-700">Save</button> -->
             <button @click="update()" class="rounded text-gray-100 px-3 py-1 bg-blue-500 hover:shadow-inner hover:bg-blue-700">Update</button>
         </template>
     </jet-dialog-modal>
 </template>
 <script>
-import { reactive, ref } from '@vue/reactivity'
+import { computed, reactive, ref } from '@vue/reactivity'
 import JetDialogModal from '../Jetstream/DialogModal.vue'
+import { onMounted } from '@vue/runtime-core'
 export default {
     props : [
-        'room'
+        'room',
+        'userLength'
     ],
     components: {
         JetDialogModal,
@@ -116,22 +122,33 @@ export default {
             other : '',
         })
 
+        const originData = reactive({
+            roomFood : props.room.cost.food_cost,
+            roomRoom : props.room.cost.room_cost,
+            roomTran : props.room.cost.tran_cost,
+            roomOther : props.room.cost.other_cost,
+        })
+
+        onMounted(() => {
+            form.food = props.room.cost.food_cost
+            form.room = props.room.cost.room_cost
+            form.tran = props.room.cost.tran_cost
+            form.other = props.room.cost.other_cost
+        })
+
         const costBtn = ref(false)
 
-        // 1. 리스트를 불러와야함 -> 브로드캐스팅으로 해야할듯 함
-        // 2. 처음을 어캐할지 생각중...
+        const errorMessage = ref('')
 
-        function submit() {
-            axios.post(`/room/${props.room.id}/cost`, {
-                food_cost : form.food,
-                room_cost : form.room,
-                tran_cost : form.tran,
-                other_cost : form.other,
-            }).then(response => {
-                console.log(response.data)
-            }).catch(error => {
-                console.log(error);
-            })
+        const sum = computed(() => parseInt(originData.roomFood) + parseInt(originData.roomRoom) + parseInt(originData.roomTran) + parseInt(originData.roomOther))
+        const dutchPay = computed(() => sum.value / props.userLength )
+
+        function costBtnClose() {
+            form.food = originData.roomFood
+            form.room = originData.roomRoom
+            form.tran = originData.roomTran
+            form.other = originData.roomOther
+            errorMessage.value = ''
         }
 
         function update() {
@@ -141,17 +158,37 @@ export default {
                 tran_cost : form.tran,
                 other_cost : form.other,
             }).then(response => {
-                console.log(response.data)
+                costBtn.value = false
             }).catch(error => {
                 console.log(error);
+                errorMessage.value = 'you are not owner'
             })
         }
 
+        const broadcastingRoom = Echo.join(`chat-room.${props.room.id}`)
+            .listen('UpdateCost', (e) => {
+                console.log(e)
+                form.food = e.cost.food_cost
+                originData.roomFood = e.cost.food_cost
+                form.room = e.cost.room_cost
+                originData.roomRoom = e.cost.room_cost
+                form.tran = e.cost.tran_cost
+                originData.roomTran = e.cost.tran_cost
+                form.other = e.cost.other_cost
+                originData.roomOther = e.cost.other_cost
+            })
+
         return {
             form,
-            submit,
+            onMounted,
             update,
             costBtn,
+            broadcastingRoom,
+            originData,
+            costBtnClose,
+            errorMessage,
+            sum,
+            dutchPay,
         }
     }
 

@@ -85,6 +85,7 @@ import RoomList from './RoomList.vue'
 import JetDialogModal from '../Jetstream/DialogModal.vue'
 import DatePicker from './DatePicker.vue'
 import { notify } from "notiwind"
+import { Inertia } from '@inertiajs/inertia'
 export default {
     components : {
         RoomList,
@@ -93,8 +94,6 @@ export default {
     },
     props : [
         'roomList',
-        // 'exist',
-        // 'error',
         'dateValue',
     ],
     setup(props) {
@@ -136,25 +135,29 @@ export default {
         }
 
         function searchRoom() {
-            axios.get('/room/find', {
-                params: {
-                    password : searchRoomPassword.value,
-                }
-            }).then(response => {
-                searchRoomPassword.value = ''
-                searchRoomModal.value = false
-                roomLists.value.push(response.data.room)
-                notify({
-                    group: "joinUser",
-                    title: 'success',
-                }, 2000) // 2s
-            }).catch(error => {
-                console.error(error)
-                notify({
-                    group: "deleteUser",
-                    title: 'error',
-                }, 2000) // 2s
+            // axios.get('/room/find', {
+            //     params: {
+            //         password : searchRoomPassword.value,
+            //     }
+            Inertia.get('/room/find', {
+                password : searchRoomPassword.value,
             })
+
+            // }).then(response => {
+            //     searchRoomPassword.value = ''
+            //     searchRoomModal.value = false
+            //     roomLists.value.push(response.data.room)
+            //     notify({
+            //         group: "joinUser",
+            //         title: 'success',
+            //     }, 2000) // 2s
+            // }).catch(error => {
+            //     console.error(error)
+            //     notify({
+            //         group: "deleteUser",
+            //         title: 'error',
+            //     }, 2000) // 2s
+            // })
         }
 
         return {

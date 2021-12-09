@@ -8,6 +8,7 @@ use App\Models\Chat;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -69,5 +70,18 @@ class ChatController extends Controller
         $chat->delete();
 
         return response()->json(201);
+    }
+
+    public function updateImageDesc(Request $request, $chatId)
+    {
+        // TODO : 권한
+
+        $chat = Chat::find($chatId);
+        if ($chat) {
+            $chat->desc = $request->desc;
+            $chat->save();
+        }
+
+        return Redirect::route('room.index');
     }
 }

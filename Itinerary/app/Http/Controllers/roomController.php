@@ -3,15 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Events\AddSchedule;
+use App\Events\CheckUser;
 use App\Events\DeleteSchedule;
+use App\Events\UpdateCost;
+use App\Events\UpdateRoom;
 use App\Models\Chat;
 use App\Models\Cost;
 use App\Models\Room;
 use App\Models\Schedule;
 use App\Models\User;
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -21,7 +26,6 @@ class RoomController extends Controller
     public function index()
     {
         $roomList = User::find(auth()->user()->id)->rooms()->get();
-
         $chatImage = Chat::where('image', '!=', 'null')->with('room')->get();
 
         return Inertia::render('Container', ['roomList' => $roomList, 'chatImage' => $chatImage]);
@@ -60,14 +64,21 @@ class RoomController extends Controller
 
         auth()->user()->rooms()->toggle($room->id);
 
-        // $roomList = auth()->user()->rooms();
-        // dd($roomList);
-        // return Redirect::route('room.index');
+        $cost = new Cost();
+        $cost->room_id = $room->id;
+        $cost->save();
+
         return response()->json(['room' => $room]);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $roomId)
     {
+        $room = Room::find($roomId);
+
+        if (!Gate::allows('update-request', $room)) {
+            return response()->json(['message' => 'you are not owner'], 400);
+        }
+
         $validator = Validator::make($request->all(), [
             'title' => 'required',
             'owner' => 'required',
@@ -78,24 +89,23 @@ class RoomController extends Controller
             return Inertia::render('Container', ['error' => $validator->errors()]);
         }
 
-        $room = Room::find($id);
         $room->title = $request->title;
         $room->owner = $request->owner;
         $room->start_period = $request->period[0];
         $room->end_period = $request->period[1];
         $room->save();
 
+        broadcast(new UpdateRoom($room, $roomId));
+
         return response()->json($room);
     }
 
     public function show($roomId)
     {
-        // $chat = Room::find($id)->chats();
-        // 수정 필요!!
-        $room = Room::find($roomId);
-        // $chatList = Chat::where('room_id', $roomId)->paginate(5)->get();
+
+        $room = Room::where('id', $roomId)->with('cost')->get();
+
         return Inertia::render('ChatRoomContainer', ['room' => $room]);
-        // return Inertia::render('ChatRoom', ['room' => $room]);
     }
 
     public function destroy($id)
@@ -129,9 +139,13 @@ class RoomController extends Controller
 
         if ($isExist) {
             auth()->user()->rooms()->toggle($isExist->id);
-            return response()->json(['room' => $isExist], 200);
+            // return response()->json(['room' => $isExist], 200);
+            $message = true;
+            return Redirect::route('room.index', $message);
         } else {
-            return response()->json(['message' => 'error'], 400);
+            $message = false;
+            return Redirect::route('room.index', $message);
+            // return response()->json(['message' => 'error'], 400);
         }
     }
 
@@ -181,18 +195,25 @@ class RoomController extends Controller
         return response()->json($schedule);
     }
 
-    public function userBan(Room $room, User $user)
+    public function userBan($roomId, $userId)
     {
-        $user->rooms()->toggle($room->id);
-        $userList = $room->users();
 
-        $room->password = $this->rand_color();
-        $room->save();
+        $user = User::find($userId);
 
-        if (Auth::user()->id == $user->id) {
-            return route('room.index');
+        $user->rooms()->toggle($roomId);
+
+        broadcast(new CheckUser($userId, $roomId));
+
+        $room = Room::find($roomId);
+        if ($room) {
+            $room->password = $this->rand_color();
+            $room->save();
         }
-        return response()->json($userList);
+
+        // password 바꾸기 위함
+        broadcast(new UpdateRoom($room, $room->id));
+
+        return response()->json(['message' => 'complete...']);
     }
 
     public function deleteSchedule($roomId, $scheduleId)
@@ -206,12 +227,18 @@ class RoomController extends Controller
         return response()->json(['message' => 'complete']);
     }
 
-    public function setCost(Request $request, $roomId)
+
+    public function updateCost(Request $request, $roomId)
     {
+        $room = Room::find($roomId);
+
+        if (!Gate::allows('update-request', $room)) {
+            return response()->json(['message' => 'you are not owner'], 400);
+        }
 
         $validator = Validator::make($request->all(), [
-            'food_cost' => 'required',
             'room_cost' => 'required',
+            'food_cost' => 'required',
             'other_cost' => 'required',
             'tran_cost' => 'required',
         ]);
@@ -220,7 +247,8 @@ class RoomController extends Controller
             return response()->json($validator->errors());
         }
 
-        $cost = new Cost();
+
+        $cost = Cost::where('room_id', $roomId)->first();
         $cost->food_cost = (int)$request->food_cost;
         $cost->room_cost = (int)$request->room_cost;
         $cost->tran_cost = (int)$request->tran_cost;
@@ -230,35 +258,27 @@ class RoomController extends Controller
         $sum = $cost->food_cost + $cost->room_cost + $cost->tran_cost + $cost->other_cost;
         $cost->sum_cost = $sum;
         $cost->save();
+
+        broadcast(new UpdateCost($cost, $roomId));
 
         return response()->json($cost);
     }
 
-    public function updateCost(Request $request, $roomId)
+    public function getRoom($roomId)
     {
+        $room = Room::find($roomId);
 
-        $validator = Validator::make($request->all(), [
-            'food_cost' => 'required',
-            'room_cost' => 'required',
-            'other_cost' => 'required',
-            'tran_cost' => 'required',
-        ]);
+        return response()->json($room);
+    }
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors());
+    public function checkUser($roomId, $userId)
+    {
+        if (Auth::user()->id == $userId) {
+            // return Redirect::route('room.index');r
+            return Redirect::route('room.index');
+        } else {
+            // return response()->json(['message' => 'complete']);
+            return Redirect::route('room.show', $roomId);
         }
-
-        $cost = Cost::where('room_id', $roomId);
-        $cost->food_cost = (int)$request->food_cost;
-        $cost->room_cost = (int)$request->room_cost;
-        $cost->tran_cost = (int)$request->tran_cost;
-        $cost->other_cost = (int)$request->other_cost;
-        $cost->room_id = $roomId;
-
-        $sum = $cost->food_cost + $cost->room_cost + $cost->tran_cost + $cost->other_cost;
-        $cost->sum_cost = $sum;
-        $cost->save();
-
-        return response()->json($cost);
     }
 }

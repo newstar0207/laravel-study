@@ -13,7 +13,7 @@
                     Schedule
                 </div>
             </div>
-            <button @click="scheduleBtn = true" class="text-green-500">new Schedule</button>
+            <p @click="scheduleBtn = true" class="text-green-500 underline">add New Schedule</p>
         </div>
     </div>
 
@@ -28,13 +28,13 @@
                     <div class="-mt-4 absolute px-1 uppercase text-xs">
                         <label class="bg-white text-gray-600 px-1">Schedule</label>
                     </div>
-                    <input v-model="form.schedule" autocomplete="false" type="text" class="py-1 px-1 outline-none block h-full w-full">
+                    <input v-model="form.schedule" required autocomplete="false" type="text" class="py-1 px-1 outline-none block h-full w-full">
                 </div>
                 <div class="border focus-within:border-blue-500 focus-within:text-blue-500 relative rounded p-1">
                     <div class="-mt-4 absolute px-1 uppercase text-xs">
                         <label class="bg-white text-gray-600 px-1">Date</label>
                     </div>
-                    <input type='date' v-model="form.date" autocomplete="false" class="py-1 px-1 outline-none block h-full w-full">
+                    <input type='date' v-model="form.date" required autocomplete="false" class="py-1 px-1 outline-none block h-full w-full">
                 </div>
             </div>
         </template>
@@ -62,19 +62,11 @@
                     <svg @click="deleteSchedule(schedule.id)" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                    <!-- <button @click="deleteSchedule(schedule.id)">delete</button> -->
-                    <!-- <button @click="completeSchedule(schedule.id)">complete</button> -->
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- <div>
-            <div class="border-b-2">
-                <div class="flex flex-row-reverse">
-                </div>
-            </div>
-    </div> -->
 </template>
 <script>
 import { reactive, ref } from '@vue/reactivity'
@@ -116,6 +108,7 @@ export default {
             }).then(response => {
                 console.log(response.data)
                 resetForm()
+                scheduleBtn.value = false
             }).catch(error => {
                 console.error(error)
             })
@@ -143,7 +136,7 @@ export default {
             })
         }
 
-        var broadcastingChatRoomPlan  = Echo.join(`chat-room.${props.room.id}`)
+        const broadcastingChatRoomPlan  = Echo.join(`chat-room.${props.room.id}`)
             .listen('AddSchedule', (e) => {
                 console.log(e.schedule)
                 schedules.value.push(e.schedule)
@@ -159,7 +152,7 @@ export default {
         function deleteSchedule(scheduleId){
             axios.delete(`/room/${props.room.id}/schedule/${scheduleId}`)
             .then(response => {
-                console.log(response.message)
+                console.log('delete schedule...')
             }).catch(error => {
                 console.log(error)
             })
