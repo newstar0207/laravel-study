@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\AddSchedule;
 use App\Events\CheckUser;
+use App\Events\CompleteSchedule;
 use App\Events\DeleteSchedule;
 use App\Events\UpdateCost;
 use App\Events\UpdateRoom;
@@ -86,7 +87,8 @@ class RoomController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return Inertia::render('Container', ['error' => $validator->errors()]);
+            return response()->json(['message' => $validator->errors()], 400);
+            // return Inertia::render('Container', ['error' => $validator->errors()]);
         }
 
         $room->title = $request->title;
@@ -191,6 +193,8 @@ class RoomController extends Controller
         $schedule = Schedule::find($scheduleId);
         $schedule->iscomplete = true;
         $schedule->save();
+
+        broadcast(new CompleteSchedule($schedule, $roomId));
 
         return response()->json($schedule);
     }

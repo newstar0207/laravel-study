@@ -194,7 +194,7 @@ export default {
                         }else {
                             let messageBody = document.querySelector('#messageBody');
                             let preventScroll = messageBody.scrollHeight
-                            // console.log(response.data)
+                            console.log(response.data)
                             const json = response.data
                             for(let i = 0; i < json.length; i++) {
                                 chats.value.unshift(json[i])

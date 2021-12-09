@@ -131,7 +131,7 @@ export default {
                 updateBtn.value = false
             }).catch((error) => {
                 console.error(error)
-                errorMessage.value = 'you are not owner'
+                errorMessage.value = 'you are not owner, FOREIGN KEY constraint failed'
             })
         }
 

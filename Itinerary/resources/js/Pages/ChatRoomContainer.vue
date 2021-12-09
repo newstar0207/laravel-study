@@ -81,7 +81,6 @@ export default {
                 Inertia.visit('/room/' + e.roomId + '/check/' + e.userId, {
                     method: 'get',
                 })
-
             })
 
         function checkUser(userId) {

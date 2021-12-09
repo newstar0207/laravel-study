@@ -122,7 +122,7 @@
                     move-delay="delay-300"
                 >
                     <div
-                    class="flex  w-1/3 max-w-sm mx-auto mt-4 overflow-hidden bg-white rounded-lg shadow-md"
+                    class="flex  w-2/3 max-w-sm mx-auto mt-4 overflow-hidden bg-white rounded-lg shadow-md"
                     v-for="notification in notifications"
                     :key="notification.id"
                     >
@@ -159,7 +159,7 @@
                     move-delay="delay-300"
                 >
                     <div
-                    class="flex w-1/3 max-w-sm mx-auto mt-4 overflow-hidden bg-white rounded-lg shadow-md"
+                    class="flex w-2/3 max-w-sm mx-auto mt-4 overflow-hidden bg-white rounded-lg shadow-md"
                     v-for="notification in notifications"
                     :key="notification.id"
                     >
@@ -171,7 +171,7 @@
 
                         <div class="px-4 py-2 -mx-3">
                             <div class="mx-3">
-                            <span class="font-semibold text-blue-500">{{ notification.title }}Info</span>
+                            <span class="font-semibold text-blue-500">{{ notification.title }}</span>
                             <p class="text-sm text-gray-600">{{ notification.text }}</p>
                             </div>
                         </div>

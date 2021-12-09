@@ -124,13 +124,6 @@ export default {
                 iscomplete : true,
             }).then(response => {
                 console.log(response.data)
-                for(let i = 0; i < schedules.value.length; i++) {
-                    if(schedules.value[i].id == response.data.id){
-                        schedules.value[i].iscomplete = 1
-                        break
-                    }
-                }
-                schedules.value
             }).catch(error => {
                 console.log(error)
             })
@@ -144,6 +137,13 @@ export default {
                 for(let i = 0; i < schedules.value.length; i++) {
                     if(schedules.value[i].id == e.scheduleId){
                         schedules.value.splice(i,1)
+                        break
+                    }
+                }
+            }).listen('CompleteSchedule', (e) => {
+                for(let i = 0; i < schedules.value.length; i++) {
+                    if(schedules.value[i].id == e.schedule.id){
+                        schedules.value[i].iscomplete = 1
                         break
                     }
                 }
