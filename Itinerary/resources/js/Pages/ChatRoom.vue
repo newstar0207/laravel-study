@@ -54,7 +54,7 @@
 
                 <div class="flex flex-col flex-grow space-y-4 p-3 overflow-y-scroll h-96" id="messageBody">
                 <intersect v-if="callInter" @enter='inters(true)' @leave='inters(false)' @destroyed='destroyInter' @change='changeInter'>
-                    <div  class="text-black text-center text-gray-300 target">more..</div>
+                    <div class="text-center text-white target">.</div>
                 </intersect>
                 <div v-for="chat in chats" :key="chat.id">
                     <!-- 내가 쓴 -->
@@ -181,6 +181,12 @@ export default {
 
 
         // infinite scroll
+
+        // const moreChat = ref()
+        // if (moreChat.value < 10) {
+        //     console.log('more chat needed');
+        // }
+
         const skip = ref(0)
         function inters(enter) {
             setTimeout(() => { //Throttling
@@ -321,6 +327,7 @@ export default {
             skip,
             destroyInter,
             changeInter,
+            // moreChat,
 
 
         }

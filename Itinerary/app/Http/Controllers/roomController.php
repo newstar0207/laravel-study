@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\AddSchedule;
 use App\Events\CheckUser;
 use App\Events\CompleteSchedule;
+use App\Events\DeleteRoom;
 use App\Events\DeleteSchedule;
 use App\Events\UpdateCost;
 use App\Events\UpdateRoom;
@@ -115,12 +116,14 @@ class RoomController extends Controller
         $room = Room::find($id);
         $roomList = User::find(Auth::user()->id)->rooms()->get();
 
-        if ($room->owner != Auth::user()->id) {
+        if ($room->owner != Auth::user()->name) {
             return Inertia::render('Container', ['roomList' => $roomList, 'error' => 'your not owner...']);
         }
 
+        broadcast(new DeleteRoom($id))->toOthers();
+
         $room->delete();
-        return Inertia::render('Container', ['roomList' => $roomList]);
+        return Redirect::route('room.index');
     }
 
     public function find(Request $request)

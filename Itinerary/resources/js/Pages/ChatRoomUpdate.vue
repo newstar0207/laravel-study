@@ -1,4 +1,4 @@
-q   <template>
+<template>
     <div class="">
         <!-- 방 수정 (오너일 경우만 가능하게 바꿀것) -> 모달로 바꿀것-->
 
@@ -12,7 +12,7 @@ q   <template>
                 </div>
             </div>
 
-            <button @click="updateBtn = true" class="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" type="button">
+            <button  v-if="$page.props.user.name == room.owner" @click="updateBtn = true" class="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" type="button">
                 Update
             </button>
         </div>
@@ -35,7 +35,7 @@ q   <template>
             <template #footer>
                 <div class="flex justify-between">
                     <button @click="updateRoom()" class="text-white bg-blue-500 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Submit</button>
-                    <button  class="text-white bg-red-500 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Delete Room</button>
+                    <button @click='deleteChatRoom()' class="text-white bg-red-500 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Delete Room</button>
                 </div>
             </template>
         </jet-dialog-modal>
@@ -119,6 +119,9 @@ export default {
                 originData.roomTitle = e.room.title
                 originData.roomPassword = e.room.password
                 originData.roomPeriod = [e.room.start_period, e.room.end_period]
+            }).listen('DeleteRoom', (e) => {
+                console.log('deleteRoom Event')
+                Inertia.get(route('room.index'))
             })
 
 

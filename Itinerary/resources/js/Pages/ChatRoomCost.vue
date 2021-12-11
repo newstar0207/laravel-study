@@ -10,7 +10,7 @@
                     Cost
                 </div>
             </div>
-            <p @click="costBtn = true" class="text-green-500 underline">update Cost</p>
+            <p v-if="$page.props.user.name == room.owner" @click="costBtn = true" class="text-green-500 underline">update Cost</p>
         </div>
 
         <div class="flex flex-col mt-5">
